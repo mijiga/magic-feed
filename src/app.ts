@@ -8,6 +8,7 @@ import { getScan, ignoreScan, ingestScans, listScans, listSources } from "./serv
 import { searchEvents } from "./services/search.js";
 import { todayIn } from "./services/timeline.js";
 import { getVocabulary, listPlaces, proposeTerm } from "./services/vocabulary.js";
+import { registerFeedPage } from "./web/routes.js";
 
 export interface AppOptions {
   db: Db;
@@ -86,6 +87,8 @@ export function createApp({ db, today = () => todayIn("Africa/Johannesburg") }: 
 
   app.openapi(r.listReviewRoute, (c) => c.json(reviewQueue(db, c.req.valid("query").place, today()), 200));
   app.openapi(r.reviewEventRoute, (c) => c.json(reviewEvent(db, c.req.valid("param").id, c.req.valid("json"), today()), 200));
+
+  registerFeedPage(app, db, today);
 
   app.doc("/openapi.json", {
     openapi: "3.0.0",
