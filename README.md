@@ -119,7 +119,7 @@ The tests in `test/` start the real server against a new database and call it ov
 
 ## Documents
 
-- `docs/design-writeup.html`: design write-up with the plan, model, interface, principles, open decisions, verification cases and execution plan.
+- `docs/design-writeup.html`: design write-up with the plan, model, interface, agent tasks, verification cases and execution plan.
 - `docs/design-notes.md`: transcription of the pen and paper notes. The photos are in `docs/notes/`.
 - `docs/entities-and-flow.html`: diagram of the entities and the process flow.
 - `docs/sources-research.md`: researched sources for Hermanus events.
