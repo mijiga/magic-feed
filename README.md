@@ -48,10 +48,10 @@ With Codex or another agent, use the prompt `Read .claude/skills/<skill>/SKILL.m
 
 ### Results of a run on 24 November 2026
 
-- Ingestion: 90 items from 2 pages of The Village NEWS.
-- Processing: 26 events (14 recurring), 41 scans ignored. 21 ignored scans were outside Hermanus (Stanford, Gansbaai, Greyton, Elim), and 20 were not for travellers (club meetings, support groups).
-- Published: 14 events. In review: 12 events. Each one in review names no town for its venue, for example "confidence 0.7 is below 0.8: The source names the venue 'Road House Cinema, Whale Coast Mall' but no town." The venue lookup under Production improvements removes most of this review work.
-- Trip search with the step 6 prompt: 8 events, including three concerts at Hermanus Golf Club, the Hermanus Country Market on both Saturdays and a vineyard afternoon in the Hemel-en-Aarde Valley. Each one has its date, time, price and source link. The agent also listed the First Fridays Art Walk from a second search without the interests filter.
+- Ingestion: 90 items.
+- Processing: 26 events, 41 scans ignored (outside Hermanus or not for travellers).
+- Published: 14. In review: 12, all because the source gives no town.
+- Trip search (step 6): 8 events with dates, prices and source links.
 
 ## Tests
 
