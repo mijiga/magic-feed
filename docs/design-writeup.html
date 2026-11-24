@@ -78,8 +78,6 @@ td:first-child { white-space: nowrap; font-weight: 500; }
       <li><a href="#model">Data model</a></li>
       <li><a href="#interface">Interface</a></li>
       <li><a href="#agents">Agent tasks</a></li>
-      <li><a href="#principles">Principles</a></li>
-      <li><a href="#decisions">Open decisions</a></li>
       <li><a href="#checks">Verification</a></li>
       <li><a href="#plan">Execution plan</a></li>
     </ul>
@@ -179,62 +177,6 @@ flowchart TD
       <li>
         <h3>find-events</h3>
         <p>The agent maps the traveller's interests to vocabulary terms and searches the trip window. It runs a second search without the interests filter, so it can mention a large event that the traveller may want anyway. It lists expected events separately and shows ticket sale cutoffs first.</p>
-      </li>
-    </ul>
-  </section>
-
-  <section id="principles">
-    <h2>Principles</h2>
-    <ul class="panel list">
-      <li>
-        <h3>Store the raw item before any interpretation.</h3>
-        <p class="cost"><b>Accepted cost:</b> the database holds a copy of every source item, including items that are not events. In return, any event can be traced to the source text, and processing can run again with a better skill.</p>
-      </li>
-      <li>
-        <h3>Agents change data only through the API.</h3>
-        <p class="cost"><b>Accepted cost:</b> each task needs an endpoint, and bulk changes take many calls. In return, the API validates every write, and the change log records every change with its reason.</p>
-      </li>
-      <li>
-        <h3>An uncertain event goes to a person, with the reason.</h3>
-        <p class="cost"><b>Accepted cost:</b> human time. In the last run, 12 of 26 events went to review because the source gave no town. In return, a wrong location does not reach a planner.</p>
-      </li>
-      <li>
-        <h3>Labels come from one approved vocabulary.</h3>
-        <p class="cost"><b>Accepted cost:</b> a new kind of event waits for review until a person approves its label. In return, a search for <code>music</code> finds every music event, and labels do not grow into near-duplicates.</p>
-      </li>
-      <li>
-        <h3>The API computes status from the times on each request.</h3>
-        <p class="cost"><b>Accepted cost:</b> each read does more work, and the times must be precise. In return, a planner who looks again months later sees the correct status without a background job.</p>
-      </li>
-    </ul>
-  </section>
-
-  <section id="decisions">
-    <h2>Open decisions</h2>
-    <ul class="panel list">
-      <li>
-        <h3>Fixed source list or open search</h3>
-        <p><span class="label">Recommendation</span> Open search. The researched sources are a starting point. The agent also searches the web, and it links listings of the same event from different sources, so each listing fills gaps in the others.</p>
-        <div class="worked">
-          <p><span class="label">Fixed list</span> With The Village NEWS only, the FynArts Festival (24 June to 4 July 2027) appears about six weeks before it starts. A planner who books in December 2026 does not see it.</p>
-          <p><span class="label">Open search</span> The agent finds the festival on hermanusfynarts.co.za in November 2026 and stores it. When The Village NEWS lists it in May 2027, the agent links the listing to the same event and adds the venue details.</p>
-        </div>
-      </li>
-      <li>
-        <h3>Venue location: map lookup or human review</h3>
-        <p><span class="label">Recommendation</span> Map lookup. The agent looks up a venue with the Google Maps Places API when the source gives no town, and the feed stores each confirmed venue.</p>
-        <div class="worked">
-          <p><span class="label">Human review</span> The Cat in the Hat (3D) at Road House Cinema, Whale Coast Mall gets confidence 0.7 and goes to review. Each new film at that cinema goes to review again.</p>
-          <p><span class="label">Map lookup</span> The lookup returns an address in Hermanus. The event is published at 0.9, and the next film at the same venue needs no lookup.</p>
-        </div>
-      </li>
-      <li>
-        <h3>A run of many dates: one rule or one Time per date</h3>
-        <p><span class="label">Recommendation</span> One recurring Time with exceptions when the dates follow a pattern. One Time per date when they do not.</p>
-        <div class="worked">
-          <p><span class="label">One rule</span> A show from Tuesday to Saturday for four months, with three dark days, is one Time: <code>FREQ=WEEKLY;BYDAY=TU,WE,TH,FR,SA</code> with three exceptions. A cancelled night is one change to <code>exceptions</code>.</p>
-          <p><span class="label">One Time per date</span> The same show is 81 one-off Times. A cancelled night is a change to the whole times list, and the change log stores all 81 dates twice.</p>
-        </div>
       </li>
     </ul>
   </section>
