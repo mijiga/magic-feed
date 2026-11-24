@@ -119,9 +119,9 @@ The tests in `test/` start the real server against a new database and call it ov
 
 ## Documents
 
-- `docs/design-writeup.html`: design write-up with the plan, model, interface, agent tasks, verification cases and execution plan.
+- Design write-up: https://claude.ai/artifact/CTG3cyJAsXMKNdh5EdAqsZ. It has the plan, model, interface, agent tasks, verification cases and execution plan. The source is `docs/design-writeup.html`.
 - `docs/design-notes.md`: transcription of the pen and paper notes. The photos are in `docs/notes/`.
-- `docs/entities-and-flow.html`: diagram of the entities and the process flow.
+- Entities and flow: https://claude.ai/artifact/38Nn9HQhPLYFTk6VdyuFAk. It shows the entities and the process flow from the pen and paper notes. The source is `docs/entities-and-flow.html`.
 - `docs/sources-research.md`: researched sources for Hermanus events.
 - `docs/production-improvements.md`: changes for a production version, such as venue lookup with Google Maps and open sources.
 
