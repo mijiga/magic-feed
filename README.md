@@ -21,7 +21,7 @@ npm run typecheck
 
 ## Flow
 
-1. An agent with the `ingest-village-news` skill fetches the source and posts each item to `POST /scans`. The API stores the item as it is. If an item has the same content as before, the API does not store a new scan, and the linked event gets a new `last_checked` date. If the content changed, the API stores a new pending scan.
+1. An agent with the `ingest-sources` skill fetches each active source and posts each item to `POST /scans`. The skill has one section for each source. The Village NEWS is the only source so far. The API stores the item as it is. If an item has the same content as before, the API does not store a new scan, and the linked event gets a new `last_checked` date. If the content changed, the API stores a new pending scan.
 2. An agent with the `process-scans` skill reads `GET /scans?state=pending`. For each scan, it creates an event, updates an existing event, or ignores the scan with a reason. It looks for duplicates with `GET /events?name=`. It chooses labels from `GET /vocabulary`, sets a confidence score, and states the fact that lowers the confidence in `confidence_reason`.
 3. The API publishes an event when the confidence is 0.8 or higher and all labels are approved. Other events go to `GET /review` with their reasons, for example "confidence 0.6 is below 0.8: The source names no venue and no town." A person approves or rejects them with `POST /events/{id}/review`.
 4. A planner's agent with the `find-events` skill searches `GET /events` with the trip dates and the traveller's interests. It reads `GET /changes?since=` to see what changed since the last check.
