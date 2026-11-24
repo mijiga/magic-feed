@@ -125,24 +125,31 @@ export const Labels = z.object({
   suitability: z.array(z.string()).min(1),
 });
 
-export const EventInput = z
-  .object({
-    name: z.string().min(2),
-    description: z.string().nullable().default(null),
-    place_id: z.string(),
-    venue: z.string().nullable(),
-    ...Labels.shape,
-    state: EventState.default("active"),
-    confidence: z.number().min(0).max(1).openapi({ description: "Processing confidence. Below 0.8 sends the event to human review." }),
-    price: z.string().nullable().default(null).openapi({ example: "R650 early bird, R750 regular" }),
-    booking_url: z.string().url().nullable().default(null),
-    ticket_sale_cutoff: IsoDate.nullable().default(null),
-    times: z.array(TimeInput).min(1),
-    scan_ids: z.array(z.string()).min(1).openapi({ description: "Scans this event comes from. They become processed." }),
-  })
-  .openapi("EventInput");
+// Defaults live only on EventInput. A default inside EventPatch would turn a missing key into a change.
+const EventFields = z.object({
+  name: z.string().min(2),
+  description: z.string().nullable(),
+  place_id: z.string(),
+  venue: z.string().nullable(),
+  ...Labels.shape,
+  state: EventState,
+  confidence: z.number().min(0).max(1).openapi({ description: "Processing confidence. Below 0.8 sends the event to human review." }),
+  price: z.string().nullable().openapi({ example: "R650 early bird, R750 regular" }),
+  booking_url: z.string().url().nullable(),
+  ticket_sale_cutoff: IsoDate.nullable(),
+  times: z.array(TimeInput).min(1),
+  scan_ids: z.array(z.string()).min(1).openapi({ description: "Scans this event comes from. They become processed." }),
+});
 
-export const EventPatch = EventInput.partial()
+export const EventInput = EventFields.extend({
+  description: EventFields.shape.description.default(null),
+  state: EventState.default("active"),
+  price: EventFields.shape.price.default(null),
+  booking_url: EventFields.shape.booking_url.default(null),
+  ticket_sale_cutoff: EventFields.shape.ticket_sale_cutoff.default(null),
+}).openapi("EventInput");
+
+export const EventPatch = EventFields.partial()
   .extend({
     reason: z.string().min(3).openapi({ description: "Why the event changed. Stored in the change log." }),
   })

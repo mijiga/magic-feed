@@ -67,10 +67,9 @@ export function createApp({ db, today = () => todayIn("Africa/Johannesburg") }: 
   app.openapi(r.ignoreScanRoute, (c) => c.json(ignoreScan(db, c.req.valid("param").id, c.req.valid("json").reason), 200));
 
   app.openapi(r.createEventRoute, (c) => c.json(createEvent(db, c.req.valid("json"), today()), 201));
-  app.openapi(r.patchEventRoute, async (c) => {
-    const provided = new Set(Object.keys((await c.req.json()) as object));
-    return c.json(patchEvent(db, c.req.valid("param").id, c.req.valid("json"), provided, today()), 200);
-  });
+  app.openapi(r.patchEventRoute, (c) =>
+    c.json(patchEvent(db, c.req.valid("param").id, c.req.valid("json"), today()), 200),
+  );
   app.openapi(r.searchEventsRoute, (c) => c.json(searchEvents(db, c.req.valid("query"), today()), 200));
   app.openapi(r.getEventRoute, (c) =>
     c.json(getEventDetail(db, c.req.valid("param").id, c.req.valid("query").as_of ?? today()), 200),
