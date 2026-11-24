@@ -28,57 +28,23 @@ npm run typecheck
 
 ## Run the flow
 
-An agent does steps 1, 2 and 4 by following a skill. Each skill is a Markdown file in `.claude/skills/<name>/SKILL.md`. The agent reads it and calls the API with curl. You need Node 22 or later and Claude Code or Codex.
+You need Node 22 or later and Claude Code or Codex.
 
-**1. Start the API with an empty database.** Keep this terminal open.
+1. Start the API with an empty database:
 
-```sh
-npm install
-rm -f feed.db feed.db-wal feed.db-shm
-npm start
-```
+   ```sh
+   npm install
+   rm -f feed.db feed.db-wal feed.db-shm
+   npm start
+   ```
 
-**2. Open a second terminal in this folder and start an agent.**
+2. In a second terminal in this folder, run `claude`. Allow `curl` and `python3` when it asks.
+3. Run `/ingest-sources`.
+4. Run `/process-scans`. This takes a few minutes.
+5. Open http://localhost:8787/feed. Set Review to All to see every event. `curl localhost:8787/review` lists the events that wait for a person.
+6. Run `/find-events` with a trip, for example: `/find-events A couple stays in Hermanus from 3 to 12 December 2026. They like live music, wine and weekend markets.`
 
-With Claude Code, run `claude`. Claude Code loads the three skills from `.claude/skills/`, so you can call them as slash commands. Allow the agent to run `curl` and `python3` when it asks.
-
-With Codex or another agent, give the path of the skill file in the prompt, as in the prompts below.
-
-**3. Ingest the sources.**
-
-```text
-/ingest-sources
-```
-
-Other agents: `Read .claude/skills/ingest-sources/SKILL.md and follow it. The API runs at http://localhost:8787.`
-
-The agent fetches The Village NEWS calendar and posts every item to the API. Check the result with `curl "localhost:8787/scans?state=pending&limit=1"`. The `count` field shows the number of scans that wait for processing.
-
-**4. Process the scans.**
-
-```text
-/process-scans
-```
-
-Other agents: `Read .claude/skills/process-scans/SKILL.md and follow it until no scan is pending.`
-
-The agent decides for each scan if it is an event in Hermanus for travellers. It creates the events, merges repeated listings into one recurring event, and ignores the rest with a reason. This step takes a few minutes.
-
-**5. Look at the result.**
-
-- http://localhost:8787/feed shows the published events. Set Review to All to see every event.
-- `curl localhost:8787/review` lists the events that wait for a person, with the reason for each one.
-- To approve one: `curl -X POST localhost:8787/events/<id>/review -H 'content-type: application/json' -d '{"decision":"approve","note":"Checked the venue."}'`
-
-**6. Plan a trip.**
-
-```text
-/find-events A couple in their fifties stays in Hermanus from 3 to 12 December 2026. They like live music and wine, and they enjoy markets on a weekend morning. What is on while they are there?
-```
-
-The agent searches the feed for the trip window and the interests, and answers with dates, times, venues, prices and source links.
-
-**7. Run it again.** Run `/ingest-sources` again. Items with the same content come back `unchanged` and create no new scans. Changed items become new pending scans, and `/process-scans` updates the existing events. `GET /changes?since=<date>` lists every change.
+With Codex or another agent, use the prompt `Read .claude/skills/<skill>/SKILL.md and follow it.`
 
 ### Results of a run on 24 November 2026
 
