@@ -85,7 +85,7 @@ The agent searches the feed for the trip window and the interests, and answers w
 - Ingestion: 90 items from 2 pages of The Village NEWS.
 - Processing: 26 events (14 recurring), 41 scans ignored. 21 ignored scans were outside Hermanus (Stanford, Gansbaai, Greyton, Elim), and 20 were not for travellers (club meetings, support groups).
 - Published: 14 events. In review: 12 events. Each one in review names no town for its venue, for example "confidence 0.7 is below 0.8: The source names the venue 'Road House Cinema, Whale Coast Mall' but no town." `docs/production-improvements.md` describes a venue lookup that removes most of this review work.
-- Trip search with the step 6 prompt: 8 events, including three tribute concerts at Hermanus Golf Club, the Hermanus Country Market on both Saturdays and a vineyard afternoon in the Hemel-en-Aarde Valley. Each one has its date, time, price and source link. The agent also listed the First Fridays Art Walk from a second search without the interests filter.
+- Trip search with the step 6 prompt: 8 events, including three concerts at Hermanus Golf Club, the Hermanus Country Market on both Saturdays and a vineyard afternoon in the Hemel-en-Aarde Valley. Each one has its date, time, price and source link. The agent also listed the First Fridays Art Walk from a second search without the interests filter.
 
 ## Model
 
