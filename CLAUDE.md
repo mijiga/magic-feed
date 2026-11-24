@@ -63,7 +63,7 @@ The design is in `docs/design-notes.md`. Read it before you change the model or 
 - `main` holds verified milestones. `dev` is the integration branch.
 - Use one `feature/*` branch off `dev` for each build step or component.
 - Commit after each change that passes `npm run typecheck`. Put one logical change in each commit.
-- Merge into `dev` with `--no-ff` when the step's tests pass and the user accepts it.
+- Merge into `dev` with `--no-ff` when the step's tests pass. A merge into `dev` does not need the user's acceptance.
 - DO NOT MAKE HUGE COMMITS/BRANCHES THAT BUNCH TOGETHER SO MANY THINGS.
 
  ## Agent orchestration
