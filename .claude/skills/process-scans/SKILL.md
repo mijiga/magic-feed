@@ -37,7 +37,7 @@ If the answer to 1 or 2 is no, call `POST /scans/{id}/ignore` with a short reaso
 - `description`: two or three plain sentences from the source text. Do not invent facts.
 - `price`: the source's cost text, for example "Free" or "R150 per person".
 - `times`: see below.
-- Labels: choose `category`, at least one `interests` value and at least one `suitability` value from the vocabulary. Choose `adults` only when the source states an age limit, or the event centres on alcohol or nightlife. Otherwise choose `all ages`.
+- Labels: choose `category`, at least one `interests` value and at least one `suitability` value from the vocabulary. Suitability: choose `adults` only when the source states an age limit, or the event centres on alcohol or nightlife. Choose `kids` when the event is made for children. Choose `family` when the source says that children are welcome or that the event is family friendly. Choose `accessible` only when the source states wheelchair access. Otherwise choose `all ages`.
 - If no approved value fits, call `POST /vocabulary/proposals` with a reason, then use the proposed term. The event goes to human review.
 - `scan_ids`: every scan that the event comes from.
 
