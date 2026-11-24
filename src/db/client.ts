@@ -6,6 +6,8 @@ import * as schema from "./schema.js";
 import { APPROVED_VOCABULARY, PLACES, SOURCES } from "../domain/seed.js";
 
 export type Db = BetterSQLite3Database<typeof schema> & { $client: Database.Database };
+export type Tx = Parameters<Parameters<Db["transaction"]>[0]>[0];
+export type Conn = Db | Tx;
 
 const MIGRATIONS = fileURLToPath(new URL("../../drizzle", import.meta.url));
 

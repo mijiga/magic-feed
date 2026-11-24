@@ -1,5 +1,5 @@
 import { and, asc, eq } from "drizzle-orm";
-import type { Db } from "../db/client.js";
+import type { Conn, Db } from "../db/client.js";
 import { places, terms } from "../db/schema.js";
 import type { Place, Term, TermProposal, Vocabulary } from "../domain/types.js";
 import { badRequest } from "./errors.js";
@@ -64,7 +64,7 @@ export function checkLabels(db: Db, labels: LabelSet): string[] {
   return reasons;
 }
 
-export function approveTerms(db: Db, labels: LabelSet) {
+export function approveTerms(db: Conn, labels: LabelSet) {
   const used = termsOf(labels);
   for (const kind of KINDS) {
     for (const term of used[kind]) {

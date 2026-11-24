@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { and, asc, desc, eq, gte, inArray, sql } from "drizzle-orm";
-import type { Db } from "../db/client.js";
+import type { Conn, Db } from "../db/client.js";
 import { eventChanges, events, scans, times as timesTable } from "../db/schema.js";
 import {
   REVIEW_CONFIDENCE_THRESHOLD,
@@ -18,8 +18,6 @@ import { computeStatus, isUnknown, parseRrule } from "./timeline.js";
 import { checkLabels, requirePlace, type LabelSet } from "./vocabulary.js";
 
 export type EventRow = typeof events.$inferSelect;
-type Tx = Parameters<Parameters<Db["transaction"]>[0]>[0];
-type Conn = Db | Tx;
 type Actor = EventChange["actor"];
 
 const now = () => new Date().toISOString();
