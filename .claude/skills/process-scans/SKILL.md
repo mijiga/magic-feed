@@ -28,7 +28,8 @@ If the answer to 1 or 2 is no, call `POST /scans/{id}/ignore` with a short reaso
 
 **3. Is it already in the feed?**
 - If the scan has `previous_event_id`, the source changed an item that is already an event. Compare and `PATCH /events/{previous_event_id}` with only the changed fields, the new `scan_ids` and a `reason`.
-- Otherwise search `GET /events?q=<key words>&review=any&status=upcoming,running,expected,finished,cancelled,postponed`. If a match is the same event, PATCH it and add the scan id. Do not create a duplicate.
+- Otherwise search `GET /events?name=<event name>&review=any&status=upcoming,running,expected,finished,cancelled,postponed`. `name` matches only event names, and every word must appear. If no result comes back, try again with the two or three most distinctive words. If a match is the same event, PATCH it and add the scan id. Do not create a duplicate.
+- Do not use `q` to find duplicates. `q` also matches descriptions, so it returns events that only mention the name.
 
 **4. Build the event.**
 - `name`: the event name, without the date and without "Pre-release screening at ...".
