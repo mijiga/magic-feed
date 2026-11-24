@@ -84,7 +84,7 @@ The agent searches the feed for the trip window and the interests, and answers w
 
 - Ingestion: 90 items from 2 pages of The Village NEWS.
 - Processing: 26 events (14 recurring), 41 scans ignored. 21 ignored scans were outside Hermanus (Stanford, Gansbaai, Greyton, Elim), and 20 were not for travellers (club meetings, support groups).
-- Published: 14 events. In review: 12 events. Each one in review names no town for its venue, for example "confidence 0.7 is below 0.8: The source names the venue 'Road House Cinema, Whale Coast Mall' but no town." `docs/production-improvements.md` describes a venue lookup that removes most of this review work.
+- Published: 14 events. In review: 12 events. Each one in review names no town for its venue, for example "confidence 0.7 is below 0.8: The source names the venue 'Road House Cinema, Whale Coast Mall' but no town." The venue lookup under Production improvements removes most of this review work.
 - Trip search with the step 6 prompt: 8 events, including three concerts at Hermanus Golf Club, the Hermanus Country Market on both Saturdays and a vineyard afternoon in the Hemel-en-Aarde Valley. Each one has its date, time, price and source link. The agent also listed the First Fridays Art Walk from a second search without the interests filter.
 
 ## Model
@@ -117,13 +117,38 @@ Each result contains the dates of the event inside the window in `occurrences`. 
 
 The tests in `test/` start the real server against a new database and call it over HTTP. `gold.e2e.test.ts` loads the gold set in `gold/events.json`. It then checks the status of each event on 24 November 2026, and it checks the search results for several trip windows.
 
+## Production improvements
+
+The first version does not include these changes. A production version needs them.
+
+### Venue location lookup
+
+Many source items name a venue but no town, for example "Road House Cinema, Whale Coast Mall", "Panthera Africa" or "Landskein". Some items name no venue at all. In the first version, the processing agent cannot confirm that these events are in the place. It gives them low confidence, and they go to human review. In the first Village NEWS run, 12 of 26 events went to review for this reason.
+
+In production, the processing agent looks up the venue with the Google Maps Places API. The agent compares the address and the coordinates with the boundary of the place. If the venue is inside the boundary, the agent records the location and keeps a high confidence. If the venue is outside, the agent ignores the scan with the reason. If the lookup finds no venue or more than one, the event goes to human review.
+
+The feed stores each confirmed venue with its coordinates. The next event at the same venue does not need a new lookup.
+
+Without this lookup, the feed must leave these events out, or a person must check each one every week.
+
+### Open sources
+
+I do not agree with a fixed set of sources, because a fixed set limits the feed. A fixed set helps to keep out scams and fake events, but the benefits of open sources are larger than this risk.
+
+The agent searches for events in all the sources in `docs/sources-research.md`, and it can find more. The researched list is a starting point, not a limit.
+
+When listings from different sources describe the same event, the agent links them to one event. It uses each listing to fill the gaps in the others. For example, one listing gives the venue and another gives the price and the ticket sales window. The model already supports this, because an event can come from scans of more than one source.
+
+### Database
+
+The first version uses SQLite. Production uses PostgreSQL.
+
 ## Documents
 
 - Design write-up: https://claude.ai/artifact/CTG3cyJAsXMKNdh5EdAqsZ. It has the plan, model, interface, agent tasks, verification cases and execution plan. The source is `docs/design-writeup.html`.
 - `docs/design-notes.md`: transcription of the pen and paper notes. The photos are in `docs/notes/`.
 - Entities and flow: https://claude.ai/artifact/38Nn9HQhPLYFTk6VdyuFAk. It shows the entities and the process flow from the pen and paper notes. The source is `docs/entities-and-flow.html`.
 - `docs/sources-research.md`: researched sources for Hermanus events.
-- `docs/production-improvements.md`: changes for a production version, such as venue lookup with Google Maps and open sources.
 
 ## Stack
 
