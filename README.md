@@ -129,11 +129,9 @@ In production, the agent will look up the venue with the Google Maps Places API 
 
 ### Open sources
 
-I do not agree with a fixed set of sources, because a fixed set limits the feed. A fixed set helps to keep out scams and fake events, but the benefits of open sources are larger than this risk.
+I do not agree with a fixed set of sources, because it limits the feed. A fixed set helps to keep out scams, but open sources give more benefit.
 
-The first version reads only The Village NEWS. In production, the agent will search for events in all the sources in `docs/sources-research.md`, and it will also find new sources. The researched list will be a starting point, not a limit.
-
-When listings from different sources describe the same event, the agent will link them to one event. It will use each listing to fill the gaps in the others. For example, one listing gives the venue and another gives the price and the ticket sales window. The model already supports this, because an event can come from scans of more than one source.
+The first version reads only The Village NEWS. In production, the agent will search all the sources in `docs/sources-research.md` and find new ones. It will link listings of the same event and use each one to fill gaps in the others.
 
 ### Database
 
