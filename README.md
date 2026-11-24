@@ -73,8 +73,6 @@ The tests in `test/` start the real server against a new database and call it ov
 
 ## Production improvements
 
-The first version does not include these changes. A production version needs them.
-
 ### Venue location lookup
 
 Many sources name a venue but no town, so the agent cannot confirm the location and the event goes to review. In production, the agent will look up the venue on Google Maps.
