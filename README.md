@@ -67,18 +67,6 @@ With Codex or another agent, use the prompt `Read .claude/skills/<skill>/SKILL.m
 
 The API computes the status of an event for a date: `upcoming`, `running`, `finished`, `expected`, `cancelled` or `postponed`. An event with an unknown date has the status `expected`. Search always includes it, because it is likely to happen.
 
-## Vocabulary
-
-The approved labels are in the `vocabulary` block of `gold/events.json`. When the server starts, it approves every term in that list. An agent can propose a new term with `POST /vocabulary/proposals`. An event that uses a proposed term goes to review. When a term is approved, the API checks the events in review again and publishes the ones that waited only on that term.
-
-## Search
-
-```sh
-curl "localhost:8787/events?from=2026-12-10&to=2026-12-20&interests=music,wine&suitability=adults"
-```
-
-Each result contains the dates of the event inside the window in `occurrences`. `q` matches names, descriptions and venues. `name` matches only event names, with every word in any order.
-
 ## Tests
 
 The tests in `test/` start the real server against a new database and call it over HTTP. `gold.e2e.test.ts` loads the gold set in `gold/events.json`. It then checks the status of each event on 24 November 2026, and it checks the search results for several trip windows.
