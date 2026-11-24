@@ -1,4 +1,4 @@
-import { and, asc, eq } from "drizzle-orm";
+import { and, asc, eq, sql } from "drizzle-orm";
 import type { Db } from "../db/client.js";
 import { events } from "../db/schema.js";
 import type { Event, EventDetail, ReviewDecision } from "../domain/types.js";
@@ -10,7 +10,7 @@ export function reviewQueue(db: Db, placeId: string, asOf: string): { count: num
     .select()
     .from(events)
     .where(and(eq(events.place_id, placeId), eq(events.review_state, "needs_review")))
-    .orderBy(asc(events.created_at))
+    .orderBy(asc(events.created_at), asc(sql`rowid`))
     .all();
   const list = rows.map((r) => toEvent(db, r, asOf));
   return { count: list.length, events: list };
