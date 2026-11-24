@@ -191,13 +191,9 @@ const plainTime = (t: TimeInput): TimeInput => ({
   note: t.note,
 });
 
-/**
- * `provided` lists the keys present in the request body. Zod fills defaults
- * into the parsed patch, so a missing key must not count as a change.
- */
-export function patchEvent(db: Db, id: string, patch: EventPatch, provided: Set<string>, asOf: string): EventDetail {
+export function patchEvent(db: Db, id: string, patch: EventPatch, asOf: string): EventDetail {
   const current = requireEvent(db, id);
-  const has = (k: string) => provided.has(k) && k in patch;
+  const has = (k: keyof EventPatch) => patch[k] !== undefined;
 
   if (has("place_id")) requirePlace(db, patch.place_id!);
   const newScanIds = has("scan_ids") ? patch.scan_ids! : [];
