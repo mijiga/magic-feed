@@ -123,9 +123,7 @@ The first version does not include these changes. A production version needs the
 
 ### Venue location lookup
 
-Many source items name a venue but no town, for example "Road House Cinema, Whale Coast Mall". The processing agent cannot confirm the location, so these events go to review. In the last run, 12 of 26 events went to review for this reason.
-
-In production, the agent will look up the venue with the Google Maps Places API and check it against the boundary of the place. The feed will store each confirmed venue, so the next event at that venue will not need a lookup.
+Many sources name a venue but no town, so the agent cannot confirm the location and the event goes to review. In production, the agent will look up the venue on Google Maps.
 
 ### Open sources
 
