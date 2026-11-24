@@ -12,6 +12,14 @@ The feed stores each confirmed venue with its coordinates. The next event at the
 
 Without this lookup, the feed must leave these events out, or a person must check each one every week.
 
+## Open sources
+
+I do not agree with a fixed set of sources, because a fixed set limits the feed. A fixed set helps to keep out scams and fake events, but the benefits of open sources are larger than this risk.
+
+The agent searches for events in all the sources in `docs/sources-research.md`, and it can find more. The researched list is a starting point, not a limit.
+
+When listings from different sources describe the same event, the agent links them to one event. It uses each listing to fill the gaps in the others. For example, one listing gives the venue and another gives the price and the ticket sales window. The model already supports this, because an event can come from scans of more than one source.
+
 ## Database
 
 The first version uses SQLite. Production uses PostgreSQL.
