@@ -1,0 +1,226 @@
+<title>Magic Feed Design</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column with a short section index; tables scroll inside their own box. */
+:root {
+  --bg: #f2f4f7;
+  --surface: #ffffff;
+  --ink: #131921;
+  --muted: #5a6675;
+  --line: #d3d9e1;
+  --accent: #0d6a88;
+  --accent-soft: #e3f0f5;
+  --font-ui: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1217; --surface: #161c23; --ink: #e5eaf0; --muted: #94a1b1;
+    --line: #2a333e; --accent: #5bbfdc; --accent-soft: #15303b; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1217; --surface: #161c23; --ink: #e5eaf0; --muted: #94a1b1;
+  --line: #2a333e; --accent: #5bbfdc; --accent-soft: #15303b; color-scheme: dark;
+}
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-ui);
+  font-size: 16px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 820px; margin: 0 auto; padding-block: 40px 72px; display: flex; flex-direction: column; gap: 44px; }
+header { display: flex; flex-direction: column; gap: 10px; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+h1 { font-size: clamp(28px, 4.4vw, 38px); line-height: 1.15; margin: 0; font-weight: 700; text-wrap: balance; }
+h2 { font-size: 22px; line-height: 1.25; margin: 0; font-weight: 700; text-wrap: balance; }
+h3 { font-size: 17px; margin: 0; font-weight: 700; }
+p { margin: 0; max-width: 68ch; }
+.lede { color: var(--muted); font-size: 17px; }
+section { display: flex; flex-direction: column; gap: 16px; }
+.index { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14px; padding: 0; margin: 0; list-style: none; }
+.index a { color: var(--accent); text-decoration: none; }
+.index a:hover { text-decoration: underline; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+code { font-family: var(--font-mono); font-size: .88em; background: var(--accent-soft); padding: 1px 5px; border-radius: 4px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.table-box { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+th, td { text-align: left; vertical-align: top; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+th { font-size: 12px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+tr:last-child td { border-bottom: 0; }
+td:first-child { white-space: nowrap; font-weight: 500; }
+.num { font-variant-numeric: tabular-nums; }
+.diagram { padding: 20px 12px; overflow-x: auto; }
+.list { display: flex; flex-direction: column; gap: 0; padding: 0; margin: 0; list-style: none; }
+.list > li { padding: 16px 18px; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 6px; }
+.list > li:last-child { border-bottom: 0; }
+.cost { color: var(--muted); font-size: 15px; }
+.cost b { color: var(--ink); font-weight: 500; }
+.worked { display: flex; flex-direction: column; gap: 6px; padding-left: 14px; border-left: 2px solid var(--line); }
+.worked p { font-size: 15px; }
+.label { font-family: var(--font-mono); font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.pill { display: inline-block; font-family: var(--font-mono); font-size: 12px; padding: 1px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); white-space: nowrap; }
+.pill.muted { background: transparent; border: 1px solid var(--line); color: var(--muted); }
+.stats { display: flex; flex-wrap: wrap; gap: 10px 28px; font-size: 15px; color: var(--muted); }
+.stats b { color: var(--ink); font-size: 20px; font-weight: 700; margin-right: 4px; font-variant-numeric: tabular-nums; }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Hermanus event feed · design write-up</div>
+    <h1>Magic Feed design</h1>
+    <p class="lede">An event feed for travel planners. The first place is Hermanus, South Africa. Agents fill the feed and read it through one API.</p>
+    <ul class="index">
+      <li><a href="#summary">Summary</a></li>
+      <li><a href="#model">Data model</a></li>
+      <li><a href="#interface">Interface</a></li>
+      <li><a href="#agents">Agent tasks</a></li>
+      <li><a href="#checks">Verification</a></li>
+      <li><a href="#plan">Execution plan</a></li>
+    </ul>
+  </header>
+
+  <section id="summary">
+    <h2>Summary</h2>
+    <p>A planner looks at the same place several times between the booking and the trip, often 6 to 18 months apart. The feed must hold events of every time shape: one date, a weekly market, a run of 81 shows, a season with months only, and an event that is likely but has no dates yet.</p>
+    <p>The feed works in three stages. An agent stores each source item unchanged as a scan. A second agent turns scans into events with times, labels and a confidence score. An event with a confidence of 0.8 or higher and approved labels goes to the feed. Other events go to a person for review, with the reason. A planner's agent then searches the feed by place, trip dates and traveller profile.</p>
+    <p>The first version uses one source, The Village NEWS events calendar. The API is Hono over SQLite. Plain Claude agents do the ingestion, the processing and the trip search by following skill files.</p>
+    <div class="stats">
+      <span><b>90</b>items ingested</span>
+      <span><b>26</b>events created</span>
+      <span><b>41</b>scans ignored</span>
+      <span><b>14</b>published</span>
+      <span><b>12</b>in review</span>
+    </div>
+  </section>
+
+  <section id="model">
+    <h2>Data model</h2>
+    <p>The core of the model is the split between what happens (Event) and when it happens (Time). One event has one or more times. Each time has a type and a precision, so the feed can store a date, a month or no date at all.</p>
+    <div class="panel table-box">
+      <table>
+        <thead><tr><th>Entity</th><th>Purpose</th><th>Key fields</th></tr></thead>
+        <tbody>
+          <tr><td>Place</td><td>The area that the feed covers.</td><td><code>aliases</code> such as Onrus, Sandbaai, Hemel-en-Aarde</td></tr>
+          <tr><td>Source</td><td>A site that the feed reads.</td><td><code>kind</code>, <code>active</code></td></tr>
+          <tr><td>Scan</td><td>One raw item from a source, as fetched.</td><td><code>raw</code>, <code>content_hash</code>, <code>state</code>, <code>event_id</code></td></tr>
+          <tr><td>Event</td><td>What happens and who it suits.</td><td><code>category</code>, <code>interests</code>, <code>suitability</code>, <code>confidence</code>, <code>confidence_reason</code>, <code>review_state</code></td></tr>
+          <tr><td>Time</td><td>When it happens.</td><td><code>type</code>, <code>start</code>, <code>end</code>, <code>precision</code>, <code>rrule</code>, <code>exceptions</code>, <code>start_time</code></td></tr>
+          <tr><td>Event change</td><td>One changed field.</td><td><code>old_value</code>, <code>new_value</code>, <code>reason</code>, <code>actor</code>, <code>scan_id</code></td></tr>
+          <tr><td>Term</td><td>One allowed label value.</td><td><code>status</code>: approved or proposed</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Time shapes from the brief</h3>
+    <div class="panel table-box">
+      <table>
+        <thead><tr><th>Example</th><th>Time</th></tr></thead>
+        <tbody>
+          <tr><td>That '80s Show, 12 Dec 2026</td><td><span class="pill">one_off</span> start <code>2026-12-12T17:00</code>, precision exact</td></tr>
+          <tr><td>Hermanus Art in the Park</td><td><span class="pill">recurring</span> <code>FREQ=MONTHLY;BYDAY=1SU</code>, 10:00 to 14:00</td></tr>
+          <tr><td>Theatre show with 81 dates</td><td><span class="pill">recurring</span> an rrule for the pattern and <code>exceptions</code> for dark days</td></tr>
+          <tr><td>FynArts Festival 2027</td><td><span class="pill">one_off</span> <code>2027-06-24</code> to <code>2027-07-04</code></td></tr>
+          <tr><td>Southern right whales</td><td><span class="pill">seasonal</span> <code>06</code> to <code>11</code>, precision month, every year</td></tr>
+          <tr><td>Sculpture on the Cliffs</td><td><span class="pill">continuous</span> no dates, precision unknown, status <code>expected</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The API computes the status of an event for a given date: upcoming, running, finished, expected, cancelled or postponed. It does not store the status, so the same event shows a correct status on every visit.</p>
+  </section>
+
+  <section id="interface">
+    <h2>Interface</h2>
+    <p>The API is the only way to read or change the feed. <code>GET /</code> returns a guide that lists the calls for each task, and <code>GET /openapi.json</code> has the full schema.</p>
+    <div class="panel diagram">
+<pre class="mermaid">
+flowchart TD
+  S[Sources] --> I[Agent with ingest-sources skill]
+  I -->|POST /scans| SC[(Scans)]
+  SC -->|GET /scans?state=pending| P[Agent with process-scans skill]
+  P -->|POST /events, PATCH /events| E[(Events and Times)]
+  P -->|POST /scans/id/ignore| X[Ignored with reason]
+  E -->|confidence 0.8 or higher, approved labels| F[Published feed]
+  E -->|otherwise| R[Review queue]
+  R -->|POST /events/id/review| F
+  F -->|GET /events, GET /changes| C[Agent with find-events skill]
+</pre>
+    </div>
+    <div class="panel table-box">
+      <table>
+        <thead><tr><th>Group</th><th>Calls</th></tr></thead>
+        <tbody>
+          <tr><td>Reference</td><td><code>GET /places</code>, <code>GET /vocabulary</code>, <code>POST /vocabulary/proposals</code></td></tr>
+          <tr><td>Ingestion</td><td><code>GET /sources</code>, <code>POST /scans</code></td></tr>
+          <tr><td>Processing</td><td><code>GET /scans</code>, <code>POST /scans/{id}/ignore</code>, <code>POST /events</code>, <code>PATCH /events/{id}</code></td></tr>
+          <tr><td>Feed</td><td><code>GET /events</code> with <code>from</code>, <code>to</code>, <code>interests</code>, <code>suitability</code>, <code>name</code>, <code>q</code>; <code>GET /events/{id}</code>; <code>GET /changes?since=</code></td></tr>
+          <tr><td>Review</td><td><code>GET /review</code>, <code>POST /events/{id}/review</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Each search result lists the dates of the event inside the trip window, so an agent does not expand an rrule itself. Each 400 error lists every problem and the allowed values, so an agent can correct the request without reading the code. A person can see the same data at <code>/feed</code>.</p>
+  </section>
+
+  <section id="agents">
+    <h2>Agent tasks</h2>
+    <ul class="panel list">
+      <li>
+        <h3>ingest-sources</h3>
+        <p>The agent fetches each active source and posts every item to <code>POST /scans</code> without changes. It does not filter. The API hashes each item. An item with the same content does not create a new scan, and the linked event gets a new last-checked date. A changed item becomes a new pending scan.</p>
+      </li>
+      <li>
+        <h3>process-scans</h3>
+        <p>The agent reads the pending scans and decides for each one. It checks that the location is in the place, and that a traveller can go to the event. It looks for an existing event by name before it creates one. It merges repeated listings into one recurring event. It chooses labels from the vocabulary, sets a confidence, and states the fact that lowers the confidence.</p>
+      </li>
+      <li>
+        <h3>find-events</h3>
+        <p>The agent maps the traveller's interests to vocabulary terms and searches the trip window. It runs a second search without the interests filter, so it can mention a large event that the traveller may want anyway. It lists expected events separately and shows ticket sale cutoffs first.</p>
+      </li>
+    </ul>
+  </section>
+
+  <section id="checks">
+    <h2>Verification</h2>
+    <p>The end-to-end tests start the real server with an empty database and call it over HTTP. There are 42 tests. The gold set in <code>gold/events.json</code> has 9 events from 5 Hermanus pages, checked by hand. The cases below use 24 November 2026 as the date.</p>
+    <div class="panel table-box">
+      <table>
+        <thead><tr><th>Case</th><th>Input</th><th>Expected result</th></tr></thead>
+        <tbody>
+          <tr><td>Monthly market</td><td>Art in the Park, search 1 to 7 Dec 2026</td><td>Status running. One date: Sunday 6 Dec 2026 at 10:00.</td></tr>
+          <tr><td>One date</td><td>That '80s Show, search 10 to 20 Dec 2026</td><td>Status upcoming. One date: 12 Dec 2026 at 17:00.</td></tr>
+          <tr><td>Past event</td><td>FynArts Select, 20 to 22 Nov 2026</td><td>Status finished. Not in the default search.</td></tr>
+          <tr><td>Season</td><td>Whale season, search in December</td><td>Not in the results, because December is outside June to November.</td></tr>
+          <tr><td>Season</td><td>Whale season, search 1 to 10 Jul 2027</td><td>In the results, with the season <code>2027-06</code> to <code>2027-11</code>.</td></tr>
+          <tr><td>No dates</td><td>Sculpture on the Cliffs, any window</td><td>Status expected. In every window search.</td></tr>
+          <tr><td>Repeat ingestion</td><td>The same 90 items a second time</td><td>90 unchanged. No new scans.</td></tr>
+          <tr><td>Duplicate check</td><td><code>name=First Fridays Art Walk</code></td><td>Only the art walk. <code>q</code> also returns a market whose description names the walk.</td></tr>
+          <tr><td>Low confidence</td><td>An event at 0.6 with a reason</td><td>In review with "confidence 0.6 is below 0.8:" and the reason.</td></tr>
+          <tr><td>Label approval</td><td>An event waits only on a proposed term, and the term is approved</td><td>The event is published, and the change log records why.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="plan">
+    <h2>Execution plan</h2>
+    <p>Each step is one feature branch, merged into <code>dev</code> when its tests pass. The size labels show risk and impact.</p>
+    <div class="panel table-box">
+      <table>
+        <thead><tr><th>Step</th><th>State</th><th>Risk</th><th>Impact</th></tr></thead>
+        <tbody>
+          <tr><td>Contract: types, schema, routes</td><td><span class="pill">done</span></td><td>Low</td><td>High</td></tr>
+          <tr><td>API, timeline logic and end-to-end tests</td><td><span class="pill">done</span></td><td>Medium</td><td>High</td></tr>
+          <tr><td>Skills for ingestion, processing and trip search</td><td><span class="pill">done</span></td><td>Medium</td><td>High</td></tr>
+          <tr><td>Feed page, name search, confidence reasons, review recheck</td><td><span class="pill">done</span></td><td>Low</td><td>Medium</td></tr>
+          <tr><td>Fix the time rules in the processing skill</td><td><span class="pill muted">next</span></td><td>Low</td><td>Medium</td></tr>
+          <tr><td>Organiser and tourism-office sources</td><td><span class="pill muted">next</span></td><td>Medium</td><td>High</td></tr>
+          <tr><td>Open web search and source registration</td><td><span class="pill muted">later</span></td><td>High</td><td>High</td></tr>
+          <tr><td>Venue lookup with Google Maps</td><td><span class="pill muted">later</span></td><td>Medium</td><td>High</td></tr>
+          <tr><td>PostgreSQL for production</td><td><span class="pill muted">later</span></td><td>Low</td><td>Low</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

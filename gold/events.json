@@ -3,32 +3,48 @@
   "as_of": "2026-11-24",
   "timezone": "Africa/Johannesburg",
   "location": "Hermanus, South Africa",
-  "notes": "Facts come from the source snapshots in gold/sources. The user approved the labels on 2026-11-24.",
+  "notes": "Facts come from the source snapshots in gold/sources. The user approved the labels on 2026-11-24, and approved the second vocabulary list on the same day.",
   "vocabulary": {
     "category": [
+      "comedy",
       "concert",
       "exhibition",
       "festival",
+      "film",
       "food_and_wine",
       "market",
-      "nature"
+      "nature",
+      "sport",
+      "talk",
+      "theatre",
+      "tour",
+      "workshop"
     ],
     "interests": [
       "art",
+      "comedy",
+      "film",
       "food",
+      "history",
       "literature",
       "music",
       "nature",
       "nightlife",
+      "outdoors",
       "photography",
+      "running",
       "shopping",
+      "sport",
       "theatre",
       "wildlife",
       "wine"
     ],
     "suitability": [
+      "accessible",
       "adults",
-      "all ages"
+      "all ages",
+      "family",
+      "kids"
     ]
   },
   "events": [
