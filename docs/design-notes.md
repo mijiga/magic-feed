@@ -4,7 +4,7 @@ This file is a transcription of my pen and paper notes. The photos are in `docs/
 
 ## Event Feed
 
-Source: `IMG_4199.jpg`
+Source: page 1, left column (`notes-page-1.jpg`)
 
 - Travel agents
 - Traveller
@@ -17,7 +17,7 @@ Source: `IMG_4199.jpg`
 
 ## Core issues
 
-Source: `IMG_4200.jpg`
+Source: page 1, right column (`notes-page-1.jpg`)
 
 There are 3/4 issues here that are core to this feed being useful:
 
@@ -27,7 +27,7 @@ There are 3/4 issues here that are core to this feed being useful:
 
 ## Potential failure points
 
-Source: `IMG_4200.jpg`, `IMG_4201.jpg`
+Source: page 1, right column (`notes-page-1.jpg`)
 
 **In getting events**
 
@@ -49,7 +49,7 @@ Source: `IMG_4200.jpg`, `IMG_4201.jpg`
 
 ## The process
 
-Source: `IMG_4202.jpg`
+Source: page 2, left column (`notes-page-2.jpg`)
 
 The general process is that information is pulled via whatever means, stored as a dump in a table, following which it is processed, in which it gets labelled and tagged using rules, LLMs and agents. The ones with a high confidence score go straight to the feed and ones needing human review await just that.
 
@@ -63,7 +63,7 @@ Core parts:
 
 ## Entities
 
-Source: `IMG_4202.jpg`, `IMG_4203.jpg`, `IMG_4204.jpg`
+Source: page 2 (`notes-page-2.jpg`)
 
 **Event**
 
@@ -98,7 +98,7 @@ Source: `IMG_4202.jpg`, `IMG_4203.jpg`, `IMG_4204.jpg`
 
 ## Process flow
 
-Source: `IMG_4212.jpg` (latest). `IMG_4204.jpg` has the earlier version.
+Source: page 2, right column (`notes-page-2.jpg`).
 
 ```
 Agent + skill file
