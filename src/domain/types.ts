@@ -134,6 +134,10 @@ const EventFields = z.object({
   ...Labels.shape,
   state: EventState,
   confidence: z.number().min(0).max(1).openapi({ description: "Processing confidence. Below 0.8 sends the event to human review." }),
+  confidence_reason: z.string().min(10).openapi({
+    description: "Why the confidence has this value: what came straight from the source and what was inferred or guessed.",
+    example: "The source names the venue 'Whale Coast Mall' but no town.",
+  }),
   price: z.string().nullable().openapi({ example: "R650 early bird, R750 regular" }),
   booking_url: z.string().url().nullable(),
   ticket_sale_cutoff: IsoDate.nullable(),
@@ -190,6 +194,7 @@ export const Event = z
     review_state: ReviewState,
     review_reasons: z.array(z.string()),
     confidence: z.number(),
+    confidence_reason: z.string().nullable(),
     price: z.string().nullable(),
     booking_url: z.string().nullable(),
     ticket_sale_cutoff: z.string().nullable(),
