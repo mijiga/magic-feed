@@ -54,7 +54,8 @@ If the answer to 1 or 2 is no, call `POST /scans/{id}/ignore` with a short reaso
 - 0.9 or higher: the place, the dates and the labels come straight from the source.
 - 0.8 to 0.89: you inferred one thing, for example the recurrence pattern.
 - Below 0.8: you guessed the location, the dates or a label. The event goes to human review. This is the correct result when you are not sure.
-- Always send `confidence_reason`. State what came straight from the source and what you inferred or guessed. Name the missing or unclear fact, for example "The source names the venue 'Whale Coast Mall' but no town." or "The source states the date, the venue in Onrus and the price." A reviewer reads this reason to decide.
+- Always send `confidence_reason`. Name only the fact that lowers the confidence: what is missing, unclear or inferred. For example: "The source names the venue 'Whale Coast Mall' but no town." Do not list what the source states, such as the date, the time or the price. A reviewer reads this reason to decide.
+- When nothing lowers the confidence, write "Nothing is missing or inferred."
 - When a PATCH changes `confidence`, send a new `confidence_reason` with it.
 
 ## Status changes
