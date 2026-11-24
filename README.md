@@ -93,6 +93,7 @@ The first version uses SQLite. Production could ideally use PostgreSQL.
 - `docs/design-notes.md`: transcription of the pen and paper notes. The photos are in `docs/notes/`.
 - Entities and flow: https://claude.ai/artifact/38Nn9HQhPLYFTk6VdyuFAk. It shows the entities and the process flow from the pen and paper notes. The source is `docs/entities-and-flow.html`.
 - `docs/sources-research.md`: researched sources for Hermanus events.
+- `magic-feed-conversation.txt`: export of the Claude Code conversation in which I built the project.
 
 ## Stack
 
