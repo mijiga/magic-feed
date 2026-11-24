@@ -4,6 +4,7 @@ import { drizzle, type BetterSQLite3Database } from "drizzle-orm/better-sqlite3"
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 import * as schema from "./schema.js";
 import { APPROVED_VOCABULARY, PLACES, SOURCES } from "../domain/seed.js";
+import { recheckReview } from "../services/review.js";
 
 export type Db = BetterSQLite3Database<typeof schema> & { $client: Database.Database };
 export type Tx = Parameters<Parameters<Db["transaction"]>[0]>[0];
@@ -18,6 +19,7 @@ export function openDb(path: string): Db {
   const db = drizzle(sqlite, { schema });
   migrate(db, { migrationsFolder: MIGRATIONS });
   seed(db);
+  recheckReview(db, "The seed vocabulary approved a term that this event uses.");
   return db;
 }
 
