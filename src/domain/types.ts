@@ -135,7 +135,7 @@ const EventFields = z.object({
   state: EventState,
   confidence: z.number().min(0).max(1).openapi({ description: "Processing confidence. Below 0.8 sends the event to human review." }),
   confidence_reason: z.string().min(10).openapi({
-    description: "Why the confidence has this value: what came straight from the source and what was inferred or guessed.",
+    description: "The fact that lowers the confidence: what is missing, unclear or inferred. Do not list what the source states.",
     example: "The source names the venue 'Whale Coast Mall' but no town.",
   }),
   price: z.string().nullable().openapi({ example: "R650 early bird, R750 regular" }),
