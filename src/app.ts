@@ -29,7 +29,7 @@ const GUIDE = {
       "GET /vocabulary",
       "GET /places",
       "GET /scans?state=pending",
-      "GET /events?q=<name>&review=any (look for a duplicate, and use previous_event_id from the scan)",
+      "GET /events?name=<event name>&review=any (look for a duplicate, and use previous_event_id from the scan)",
       "POST /events, or PATCH /events/{id} to update an existing event, or POST /scans/{id}/ignore",
     ],
     "plan a trip": ["GET /events?from=YYYY-MM-DD&to=YYYY-MM-DD&interests=...&suitability=...", "GET /changes?since=<last look>"],
