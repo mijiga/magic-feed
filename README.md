@@ -55,7 +55,7 @@ With Codex or another agent, use the prompt `Read .claude/skills/<skill>/SKILL.m
 
 ## Tests
 
-The tests in `test/` start the real server against a new database and call it over HTTP. `gold.e2e.test.ts` loads the gold set in `gold/events.json`. It then checks the status of each event on 24 November 2026, and it checks the search results for several trip windows.
+End-to-end tests over HTTP. `gold.e2e.test.ts` checks the gold set in `gold/events.json`.
 
 ## Production improvements
 
