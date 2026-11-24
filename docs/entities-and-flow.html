@@ -1,0 +1,187 @@
+<title>Magic Feed Model</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one column. Flow diagram first, then the three entity tables. */
+:root {
+  --bg: #f2f4f7;
+  --surface: #ffffff;
+  --ink: #131921;
+  --muted: #5a6675;
+  --line: #d3d9e1;
+  --accent: #0d6a88;
+  --accent-soft: #e3f0f5;
+  --font-ui: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1217; --surface: #161c23; --ink: #e5eaf0; --muted: #94a1b1;
+    --line: #2a333e; --accent: #5bbfdc; --accent-soft: #15303b; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1217; --surface: #161c23; --ink: #e5eaf0; --muted: #94a1b1;
+  --line: #2a333e; --accent: #5bbfdc; --accent-soft: #15303b; color-scheme: dark;
+}
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-ui);
+  font-size: 15px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 980px; margin: 0 auto; padding-block: 40px 64px; display: flex; flex-direction: column; gap: 40px; }
+header { display: flex; flex-direction: column; gap: 6px; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+h1 { font-size: clamp(26px, 4vw, 34px); line-height: 1.15; margin: 0; font-weight: 700; text-wrap: balance; }
+h2 { font-size: 19px; margin: 0; font-weight: 700; }
+.lede { color: var(--muted); max-width: 62ch; margin: 0; }
+section { display: flex; flex-direction: column; gap: 16px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.diagram { overflow-x: auto; padding: 24px 16px; display: flex; justify-content: center; }
+.diagram svg { width: 100%; max-width: 620px; min-width: 460px; height: auto; display: block; }
+.diagram .box { fill: var(--surface); stroke: var(--ink); stroke-width: 1.4; }
+.diagram .box.key { fill: var(--accent-soft); stroke: var(--accent); }
+.diagram .box.struck { fill: none; stroke: var(--muted); stroke-dasharray: 4 4; }
+.diagram text { fill: var(--ink); font-family: var(--font-ui); font-size: 15px; }
+.diagram text.small { fill: var(--muted); font-size: 12px; font-family: var(--font-mono); }
+.diagram text.strike { fill: var(--muted); text-decoration: line-through; }
+.diagram .edge { stroke: var(--ink); stroke-width: 1.4; fill: none; }
+.diagram .edge.dim { stroke: var(--muted); stroke-dasharray: 4 4; }
+.diagram .head { fill: var(--ink); }
+.diagram .head.dim { fill: var(--muted); }
+.note { color: var(--muted); margin: 0; max-width: 70ch; }
+.entities { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; align-items: start; }
+.entity { overflow: hidden; }
+.entity h3 { margin: 0; padding: 14px 16px; font-size: 16px; font-weight: 700; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.entity h3 span { font-family: var(--font-mono); font-size: 12px; font-weight: 400; color: var(--muted); }
+.entity ul { list-style: none; margin: 0; padding: 4px 0; }
+.entity li { padding: 8px 16px; display: flex; flex-direction: column; gap: 2px; border-bottom: 1px solid var(--line); }
+.entity li:last-child { border-bottom: 0; }
+.field { font-family: var(--font-mono); font-size: 13.5px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.values { color: var(--muted); font-size: 13px; }
+.chip { font-family: var(--font-mono); font-size: 11px; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--accent); color: var(--accent); }
+.chip.pk { background: var(--accent-soft); }
+.chip.ghost { border-style: dashed; border-color: var(--muted); color: var(--muted); }
+li.removed .field { color: var(--muted); text-decoration: line-through; }
+.process { padding: 18px 20px; display: flex; flex-direction: column; gap: 10px; }
+.process p { margin: 0; max-width: 70ch; }
+.stages { font-family: var(--font-mono); font-size: 13px; color: var(--accent); }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Hermanus event feed · design notes</div>
+    <h1>Entities and process flow</h1>
+    <p class="lede">This page shows the model and the flow from my pen and paper notes. The flow follows the latest sketch, where an agent with a skill file replaced the ingestion agent.</p>
+  </header>
+
+  <section>
+    <h2>Process flow</h2>
+    <div class="panel diagram">
+      <svg viewBox="0 0 620 700" role="img" aria-labelledby="flow-title">
+        <title id="flow-title">Agent and skill file write Scans. Processing turns Scans into Events and Times. The API serves Events and Times to the consumer agent.</title>
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+            <path class="head" d="M0,0 L10,5 L0,10 z"/>
+          </marker>
+          <marker id="arrow-dim" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+            <path class="head dim" d="M0,0 L10,5 L0,10 z"/>
+          </marker>
+        </defs>
+
+        <!-- Replaced node from the earlier sketch -->
+        <rect class="box struck" x="10" y="132" width="160" height="48" rx="6"/>
+        <text class="strike" x="90" y="161" text-anchor="middle">Ingestion agent</text>
+        <text class="small" x="90" y="198" text-anchor="middle">replaced</text>
+        <path class="edge dim" d="M170,156 L238,156" marker-end="url(#arrow-dim)"/>
+
+        <!-- Agent + skill file -->
+        <rect class="box key" x="230" y="20" width="200" height="52" rx="6"/>
+        <text x="330" y="51" text-anchor="middle">Agent + skill file</text>
+        <path class="edge" d="M330,72 L330,128" marker-end="url(#arrow)"/>
+
+        <!-- Scans -->
+        <rect class="box" x="250" y="132" width="160" height="48" rx="6"/>
+        <text x="330" y="161" text-anchor="middle">Scans</text>
+        <path class="edge" d="M330,180 L330,236" marker-end="url(#arrow)"/>
+
+        <!-- Processing -->
+        <rect class="box key" x="170" y="240" width="320" height="64" rx="6"/>
+        <text x="330" y="268" text-anchor="middle">Process scans into</text>
+        <text x="330" y="288" text-anchor="middle">events &amp; time</text>
+        <path class="edge" d="M260,304 L222,366" marker-end="url(#arrow)"/>
+        <path class="edge" d="M400,304 L438,366" marker-end="url(#arrow)"/>
+
+        <!-- Events / Times -->
+        <rect class="box" x="140" y="370" width="150" height="48" rx="6"/>
+        <text x="215" y="399" text-anchor="middle">Events</text>
+        <rect class="box" x="370" y="370" width="150" height="48" rx="6"/>
+        <text x="445" y="399" text-anchor="middle">Times</text>
+        <path class="edge" d="M215,418 L215,486" marker-end="url(#arrow)"/>
+        <path class="edge" d="M445,418 L445,486" marker-end="url(#arrow)"/>
+
+        <!-- API -->
+        <rect class="box key" x="130" y="490" width="400" height="64" rx="6"/>
+        <text x="330" y="527" text-anchor="middle" style="font-size:18px;font-weight:700">API</text>
+        <text class="small" x="330" y="545" text-anchor="middle">Hono · SQLite</text>
+
+        <!-- Consumer agent -->
+        <path class="edge" d="M330,630 L330,558" marker-end="url(#arrow)"/>
+        <rect class="box" x="230" y="630" width="200" height="52" rx="6"/>
+        <text x="330" y="661" text-anchor="middle">Consumer agent</text>
+      </svg>
+    </div>
+    <div class="panel process">
+      <div class="stages">Sources → Ingestion → Processing</div>
+      <p>Information is pulled by any means and stored as a raw dump in a table. Processing then labels and tags it with rules, LLMs and agents. Records with a high confidence score go straight to the feed. Records with a low score wait for human review.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Entities</h2>
+    <div class="entities">
+      <article class="panel entity">
+        <h3>Event <span>what it is</span></h3>
+        <ul>
+          <li><div class="field">id <span class="chip pk">PK</span></div></li>
+          <li><div class="field">name</div></li>
+          <li><div class="field">category</div></li>
+          <li class="removed"><div class="field">tags</div><div class="values">Crossed out in the notes</div></li>
+          <li><div class="field">confidence</div></li>
+          <li><div class="field">last_checked</div></li>
+          <li><div class="field">last_updated</div></li>
+          <li><div class="field">interests</div><div class="values">music, botany, nature</div></li>
+          <li><div class="field">suitability</div><div class="values">accessible, child friendly, for kids</div></li>
+        </ul>
+      </article>
+
+      <article class="panel entity">
+        <h3>Time <span>when it happens</span></h3>
+        <ul>
+          <li><div class="field">id <span class="chip pk">PK</span></div></li>
+          <li><div class="field">event_id <span class="chip">→ Event</span></div></li>
+          <li><div class="field">type</div><div class="values">one off, recurring, continuous, seasonal</div></li>
+          <li><div class="field">start</div></li>
+          <li><div class="field">end</div></li>
+          <li><div class="field">precision</div><div class="values">exact, month, season</div></li>
+          <li><div class="field">exceptions</div></li>
+          <li><div class="field">recurrence_rule</div><div class="values">rrule</div></li>
+        </ul>
+      </article>
+
+      <article class="panel entity">
+        <h3>Scan <span>what a source said</span></h3>
+        <ul>
+          <li><div class="field">id <span class="chip pk">PK</span></div></li>
+          <li><div class="field">event_id <span class="chip">→ Event</span></div></li>
+          <li><div class="field">source_id <span class="chip ghost">→ Source</span></div><div class="values">Source is not defined in the notes yet</div></li>
+          <li><div class="field">date</div></li>
+          <li><div class="field">raw_data</div></li>
+        </ul>
+      </article>
+    </div>
+    <p class="note">One Event has many Times and many Scans. The notes call Scans "Scans/Observations".</p>
+  </section>
+</div>

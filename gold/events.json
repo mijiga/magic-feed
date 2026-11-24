@@ -1,0 +1,404 @@
+{
+  "version": 1,
+  "as_of": "2026-11-24",
+  "timezone": "Africa/Johannesburg",
+  "location": "Hermanus, South Africa",
+  "notes": "Facts come from the source snapshots in gold/sources. The user approved the labels on 2026-11-24.",
+  "vocabulary": {
+    "category": [
+      "concert",
+      "exhibition",
+      "festival",
+      "food_and_wine",
+      "market",
+      "nature"
+    ],
+    "interests": [
+      "art",
+      "food",
+      "literature",
+      "music",
+      "nature",
+      "nightlife",
+      "photography",
+      "shopping",
+      "theatre",
+      "wildlife",
+      "wine"
+    ],
+    "suitability": [
+      "adults",
+      "all ages"
+    ]
+  },
+  "events": [
+    {
+      "id": "art-in-the-park",
+      "source_urls": [
+        "https://www.hermanus-info.co.za/town/events/5375/hermanus-art-in-the-park-first-sundays-monthly"
+      ],
+      "snapshot": "gold/sources/hermanus-info-art-in-the-park.txt",
+      "name": "Hermanus Art in the Park",
+      "venue": "Country Market venue, Hermanus",
+      "times": [
+        {
+          "type": "recurring",
+          "start": "2021-01-15",
+          "end": "2030-12-15",
+          "precision": "exact",
+          "rrule": "FREQ=MONTHLY;BYDAY=1SU",
+          "hours": {
+            "start": "10:00",
+            "end": "14:00"
+          },
+          "exceptions": []
+        }
+      ],
+      "price": null,
+      "booking": null,
+      "ticket_sale_cutoff": null,
+      "status_as_of": "running",
+      "source_notes": "The listing window (15 January 2021 to 15 December 2030) comes from the listing site, not the organiser. The page gives the time only inside the Venue field: '10- 2pm'.",
+      "labels": {
+        "category": "market",
+        "interests": [
+          "art",
+          "shopping",
+          "food"
+        ],
+        "suitability": [
+          "all ages"
+        ]
+      }
+    },
+    {
+      "id": "that-80s-show-2026",
+      "source_urls": [
+        "https://www.hermanus-info.co.za/town/events/13561/that-80s-show-concert"
+      ],
+      "snapshot": "gold/sources/hermanus-info-that-80s-show.txt",
+      "name": "That '80s Show",
+      "venue": "Benguela Cove Lagoon Wine Estate, Bot River Lagoon, Hermanus",
+      "times": [
+        {
+          "type": "one_off",
+          "start": "2026-12-12T17:00",
+          "end": null,
+          "precision": "exact",
+          "rrule": null,
+          "hours": null,
+          "exceptions": []
+        }
+      ],
+      "price": [
+        {
+          "label": "General Admission, early bird",
+          "amount": 650,
+          "currency": "ZAR",
+          "per": "person"
+        },
+        {
+          "label": "General Admission, regular",
+          "amount": 750,
+          "currency": "ZAR",
+          "per": "person"
+        },
+        {
+          "label": "Picnic & Show Package",
+          "amount": 2150,
+          "currency": "ZAR",
+          "per": "pair"
+        },
+        {
+          "label": "VIP Table",
+          "amount": 1300,
+          "currency": "ZAR",
+          "per": "person"
+        }
+      ],
+      "booking": {
+        "phone": "087 357 0637"
+      },
+      "ticket_sale_cutoff": null,
+      "status_as_of": "upcoming",
+      "source_notes": "The page gives a start time ('From 17:00') and no end time. The page says there is an early bird price but does not give its closing date.",
+      "labels": {
+        "category": "concert",
+        "interests": [
+          "music",
+          "nightlife",
+          "wine"
+        ],
+        "suitability": [
+          "adults"
+        ]
+      }
+    },
+    {
+      "id": "cuvee-weekends-2026",
+      "source_urls": [
+        "https://www.hermanus-info.co.za/town/events/13564/cuvee-weekends-at-benguela-cove-wine-estate"
+      ],
+      "snapshot": "gold/sources/hermanus-info-cuvee-weekends.txt",
+      "name": "Cuvée Weekends at Benguela Cove",
+      "venue": "Moody Lagoon Restaurant, Benguela Cove Wine Estate, R43, Hermanus",
+      "times": [
+        {
+          "type": "recurring",
+          "start": "2026-10-14",
+          "end": "2026-12-14",
+          "precision": "exact",
+          "rrule": "FREQ=WEEKLY;BYDAY=SA,SU",
+          "hours": {
+            "start": "11:00",
+            "end": "13:00"
+          },
+          "exceptions": []
+        }
+      ],
+      "price": [
+        {
+          "label": "Bottomless brunch",
+          "amount": 295,
+          "currency": "ZAR",
+          "per": "person"
+        }
+      ],
+      "booking": {
+        "phone": "087 357 0637",
+        "required": true
+      },
+      "ticket_sale_cutoff": null,
+      "status_as_of": "running",
+      "source_notes": "The page says 'Every Saturday, Sunday and public holiday'. An RRULE cannot express public holidays. No South African public holiday falls between 14 October and 14 December 2026, so the RRULE is complete for this window. The page gives arrival slots at 11:00 and 11:30.",
+      "labels": {
+        "category": "food_and_wine",
+        "interests": [
+          "wine",
+          "food"
+        ],
+        "suitability": [
+          "adults"
+        ]
+      }
+    },
+    {
+      "id": "fynarts-select-2026",
+      "source_urls": [
+        "https://www.hermanusfynarts.co.za/"
+      ],
+      "snapshot": "gold/sources/hermanusfynarts-home.txt",
+      "name": "FynArts Select: Makers and Masters",
+      "venue": "Hermanus",
+      "times": [
+        {
+          "type": "one_off",
+          "start": "2026-11-20",
+          "end": "2026-11-22",
+          "precision": "exact",
+          "rrule": null,
+          "hours": null,
+          "exceptions": []
+        }
+      ],
+      "price": null,
+      "booking": null,
+      "ticket_sale_cutoff": {
+        "label": "Early Bird ticket sales close",
+        "date": "2026-10-16"
+      },
+      "status_as_of": "finished",
+      "source_notes": "The page uses two names: 'Makers and Masters' in the heading and 'Masters and Makers' in the Save the Dates list. The cutoff year is not stated. I took 2026 because the event is in November 2026.",
+      "labels": {
+        "category": "festival",
+        "interests": [
+          "art",
+          "music",
+          "food",
+          "literature"
+        ],
+        "suitability": [
+          "adults"
+        ]
+      }
+    },
+    {
+      "id": "fynarts-old-harbour-sunset-concert-2027",
+      "source_urls": [
+        "https://www.hermanusfynarts.co.za/"
+      ],
+      "snapshot": "gold/sources/hermanusfynarts-home.txt",
+      "name": "FynArts Old Harbour Sunset Concert",
+      "venue": "Old Harbour, Hermanus",
+      "times": [
+        {
+          "type": "one_off",
+          "start": "2027-03-06",
+          "end": "2027-03-06",
+          "precision": "exact",
+          "rrule": null,
+          "hours": null,
+          "exceptions": []
+        }
+      ],
+      "price": null,
+      "booking": null,
+      "ticket_sale_cutoff": null,
+      "status_as_of": "upcoming",
+      "source_notes": "The page gives the date only. The venue comes from the event name.",
+      "labels": {
+        "category": "concert",
+        "interests": [
+          "music"
+        ],
+        "suitability": [
+          "all ages"
+        ]
+      }
+    },
+    {
+      "id": "fynarts-festival-2027",
+      "source_urls": [
+        "https://www.hermanusfynarts.co.za/"
+      ],
+      "snapshot": "gold/sources/hermanusfynarts-home.txt",
+      "name": "Hermanus FynArts Festival",
+      "venue": "Hermanus",
+      "times": [
+        {
+          "type": "one_off",
+          "start": "2027-06-24",
+          "end": "2027-07-04",
+          "precision": "exact",
+          "rrule": null,
+          "hours": null,
+          "exceptions": []
+        }
+      ],
+      "price": null,
+      "booking": null,
+      "ticket_sale_cutoff": null,
+      "status_as_of": "upcoming",
+      "source_notes": "The page says 'ten inspiring days in June', but the dates run to 4 July 2027 (11 days). The dates are the expected value.",
+      "labels": {
+        "category": "festival",
+        "interests": [
+          "art",
+          "music",
+          "food",
+          "literature",
+          "theatre"
+        ],
+        "suitability": [
+          "all ages"
+        ]
+      }
+    },
+    {
+      "id": "southern-right-whale-season",
+      "source_urls": [
+        "https://www.hermanus.co.za/popular-activities/whale-watching/"
+      ],
+      "snapshot": "gold/sources/hermanus-whale-watching.txt",
+      "name": "Southern right whale season",
+      "venue": "Walker Bay and the Cliff Path, Hermanus",
+      "times": [
+        {
+          "type": "seasonal",
+          "start": "06",
+          "end": "11",
+          "precision": "month",
+          "rrule": "FREQ=YEARLY",
+          "hours": null,
+          "exceptions": []
+        }
+      ],
+      "price": null,
+      "booking": null,
+      "ticket_sale_cutoff": null,
+      "status_as_of": "running",
+      "source_notes": "The season is June to November. The page also says the best time is July to November, sightings are almost certain in September to November, calving is in August and September, and numbers peak in October. Viewing is from land, by boat, from the air or by sea kayak.",
+      "labels": {
+        "category": "nature",
+        "interests": [
+          "wildlife",
+          "nature",
+          "photography"
+        ],
+        "suitability": [
+          "all ages"
+        ]
+      }
+    },
+    {
+      "id": "sculpture-on-the-cliffs",
+      "source_urls": [
+        "https://www.hermanusfynarts.co.za/"
+      ],
+      "snapshot": "gold/sources/hermanusfynarts-home.txt",
+      "name": "Sculpture on the Cliffs",
+      "venue": "Cliff Path, Hermanus",
+      "times": [
+        {
+          "type": "continuous",
+          "start": null,
+          "end": null,
+          "precision": "unknown",
+          "rrule": null,
+          "hours": null,
+          "exceptions": []
+        }
+      ],
+      "price": null,
+      "booking": null,
+      "ticket_sale_cutoff": null,
+      "status_as_of": "expected",
+      "source_notes": "The page lists this exhibition and says it runs through the year. The page gives no dates. The venue comes from the event name.",
+      "labels": {
+        "category": "exhibition",
+        "interests": [
+          "art",
+          "nature"
+        ],
+        "suitability": [
+          "all ages"
+        ]
+      }
+    },
+    {
+      "id": "sculpture-legacy-walk",
+      "source_urls": [
+        "https://www.hermanusfynarts.co.za/"
+      ],
+      "snapshot": "gold/sources/hermanusfynarts-home.txt",
+      "name": "Sculpture Legacy Walk",
+      "venue": "Hermanus",
+      "times": [
+        {
+          "type": "continuous",
+          "start": null,
+          "end": null,
+          "precision": "unknown",
+          "rrule": null,
+          "hours": null,
+          "exceptions": []
+        }
+      ],
+      "price": null,
+      "booking": null,
+      "ticket_sale_cutoff": null,
+      "status_as_of": "expected",
+      "source_notes": "The page lists this walk under Exhibitions and says it runs through the year. The page gives no dates or venue.",
+      "labels": {
+        "category": "exhibition",
+        "interests": [
+          "art",
+          "nature"
+        ],
+        "suitability": [
+          "all ages"
+        ]
+      }
+    }
+  ]
+}
