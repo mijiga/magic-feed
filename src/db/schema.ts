@@ -44,6 +44,7 @@ export const events = sqliteTable(
     review_state: text("review_state", { enum: ["published", "needs_review", "rejected"] }).notNull(),
     review_reasons: text("review_reasons", { mode: "json" }).$type<string[]>().notNull(),
     confidence: real("confidence").notNull(),
+    confidence_reason: text("confidence_reason"),
     price: text("price"),
     booking_url: text("booking_url"),
     ticket_sale_cutoff: text("ticket_sale_cutoff"),

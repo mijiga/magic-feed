@@ -10,7 +10,7 @@ import { eventBody, ingestOne, startServer, type TestServer } from "./server.js"
 
 async function createWithLabel(s: TestServer, id: string, name: string, confidence: number) {
   const scan = await ingestOne(s, id, { title: name });
-  const res = await s.post("/events", eventBody({ name, interests: ["golf"], confidence, scan_ids: [scan.scan_id] }));
+  const res = await s.post("/events", eventBody({ name, interests: ["golf"], confidence, confidence_reason: "The source names a golf club but no town.", scan_ids: [scan.scan_id] }));
   return res.body.id as string;
 }
 
@@ -42,7 +42,7 @@ describe("review recheck after a review approves a term", () => {
   it("keeps a low confidence event in review with only the confidence reason", async () => {
     const { body } = await s.get(`/events/${lowConfidence}`);
     expect(body.review_state).toBe("needs_review");
-    expect(body.review_reasons).toEqual(["confidence 0.6 is below 0.8"]);
+    expect(body.review_reasons).toEqual(["confidence 0.6 is below 0.8: The source names a golf club but no town."]);
   });
 
   it("keeps a rejected event rejected", async () => {

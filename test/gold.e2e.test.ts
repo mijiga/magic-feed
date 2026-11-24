@@ -16,6 +16,7 @@ function toEventInput(g: GoldEvent, scanId: string) {
     venue: g.venue,
     ...g.labels,
     confidence: 0.95,
+    confidence_reason: "The gold set entry was checked by hand against the source.",
     price: priceText(g.price),
     ticket_sale_cutoff: g.ticket_sale_cutoff?.date ?? null,
     times: g.times.map((t) => ({

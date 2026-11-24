@@ -98,7 +98,7 @@ const EventRow: FC<{ event: SearchResultItem; start?: string }> = ({ event, star
             </p>
           )}
           <p class="dates">
-            Confidence {Math.round(event.confidence * 100)}% · Last checked {event.last_checked.slice(0, 10)} · Updated {event.last_updated.slice(0, 10)}
+            Confidence {Math.round(event.confidence * 100)}%{event.confidence_reason ? `: ${event.confidence_reason}` : ""} · Last checked {event.last_checked.slice(0, 10)} · Updated {event.last_updated.slice(0, 10)}
           </p>
           {event.source_urls.map((u) => (
             <p class="source">

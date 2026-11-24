@@ -42,7 +42,7 @@ export function recheckReview(db: Db, reason: string): number {
   let published = 0;
   db.transaction((tx) => {
     for (const row of rows) {
-      const outcome = reviewOutcome(row.confidence, checkLabels(db, row), loadTimes(tx, row.id));
+      const outcome = reviewOutcome(row.confidence, row.confidence_reason, checkLabels(db, row), loadTimes(tx, row.id));
       const sameReasons = JSON.stringify(outcome.review_reasons) === JSON.stringify(row.review_reasons);
       if (outcome.review_state === row.review_state && sameReasons) continue;
       tx.update(events).set(outcome).where(eq(events.id, row.id)).run();

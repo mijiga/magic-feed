@@ -97,12 +97,13 @@ export function writeChange(
 
 export function reviewOutcome(
   confidence: number,
+  confidenceReason: string | null,
   labelReasons: string[],
   times: TimeInput[],
 ): { review_state: ReviewState; review_reasons: string[] } {
   const low = confidence < REVIEW_CONFIDENCE_THRESHOLD;
   const reasons: string[] = [];
-  if (low) reasons.push(`confidence ${confidence} is below ${REVIEW_CONFIDENCE_THRESHOLD}`);
+  if (low) reasons.push(`confidence ${confidence} is below ${REVIEW_CONFIDENCE_THRESHOLD}: ${confidenceReason ?? "no reason given"}`);
   reasons.push(...labelReasons);
   if (low && times.some(isUnknown)) reasons.push("a time has unknown dates and confidence is below the threshold");
   return { review_state: reasons.length ? "needs_review" : "published", review_reasons: reasons };
@@ -147,7 +148,7 @@ export function createEvent(db: Db, input: EventInput, asOf: string): EventDetai
   requireScans(db, input.scan_ids);
   validateTimes(input.times);
   const labelReasons = checkLabels(db, input);
-  const review = reviewOutcome(input.confidence, labelReasons, input.times);
+  const review = reviewOutcome(input.confidence, input.confidence_reason, labelReasons, input.times);
   const at = now();
   const id = randomUUID();
   const { times, scan_ids, ...fields } = input;
@@ -173,11 +174,12 @@ const SCALAR_FIELDS = [
   "suitability",
   "state",
   "confidence",
+  "confidence_reason",
   "price",
   "booking_url",
   "ticket_sale_cutoff",
 ] as const;
-const REVIEW_FIELDS = new Set(["category", "interests", "suitability", "confidence", "times"]);
+const REVIEW_FIELDS = new Set(["category", "interests", "suitability", "confidence", "confidence_reason", "times"]);
 
 const plainTime = (t: TimeInput): TimeInput => ({
   type: t.type,
@@ -199,6 +201,9 @@ export function patchEvent(db: Db, id: string, patch: EventPatch, asOf: string):
   const newScanIds = has("scan_ids") ? patch.scan_ids! : [];
   if (newScanIds.length) requireScans(db, newScanIds);
   if (has("times")) validateTimes(patch.times!);
+  if (has("confidence") && patch.confidence !== current.confidence && !has("confidence_reason")) {
+    throw badRequest("confidence_reason is required when confidence changes", [{ path: "confidence_reason", message: "State why the confidence has the new value." }]);
+  }
 
   const labels: LabelSet = {
     category: has("category") ? patch.category! : current.category,
@@ -244,7 +249,12 @@ export function patchEvent(db: Db, id: string, patch: EventPatch, asOf: string):
 
     // An approved event keeps its review state unless a field that review depends on changes.
     if (current.review_state !== "rejected" && [...changed].some((f) => REVIEW_FIELDS.has(f))) {
-      const review = reviewOutcome(updates.confidence ?? current.confidence, labelReasons, times);
+      const review = reviewOutcome(
+        updates.confidence ?? current.confidence,
+        updates.confidence_reason ?? current.confidence_reason,
+        labelReasons,
+        times,
+      );
       if (review.review_state !== current.review_state) {
         writeChange(tx, { event_id: id, field: "review_state", old_value: current.review_state, new_value: review.review_state, reason: review.review_reasons.join("; ") || "meets the publish rule", actor: "system", scan_id: scanId }, at);
       }

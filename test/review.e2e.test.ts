@@ -13,10 +13,15 @@ describe("review", () => {
 
   it("sends low confidence and proposed labels to the review queue", async () => {
     const a = await ingestOne(s, "maybe-market", { title: "Maybe a market" });
-    const low = await s.post("/events", eventBody({ name: "Possible night market", confidence: 0.6, scan_ids: [a.scan_id] }));
+    const low = await s.post("/events", eventBody({
+        name: "Possible night market",
+        confidence: 0.6,
+        confidence_reason: "The source gives no venue or town.",
+        scan_ids: [a.scan_id],
+      }));
     expect(low.status).toBe(201);
     expect(low.body.review_state).toBe("needs_review");
-    expect(low.body.review_reasons).toEqual(["confidence 0.6 is below 0.8"]);
+    expect(low.body.review_reasons).toEqual(["confidence 0.6 is below 0.8: The source gives no venue or town."]);
     lowId = low.body.id;
 
     await s.post("/vocabulary/proposals", { kind: "interests", term: "golf", reason: "Golf days and club tournaments" });
@@ -73,7 +78,7 @@ describe("review", () => {
     expect(res.body.review_state).toBe("rejected");
     expect(res.body.changes[0]).toMatchObject({ actor: "human", new_value: "rejected" });
 
-    const patched = await s.patch(`/events/${lowId}`, { confidence: 0.95, reason: "A second source confirms it." });
+    const patched = await s.patch(`/events/${lowId}`, { confidence: 0.95, confidence_reason: "A second source names the venue and the town.", reason: "A second source confirms it." });
     expect(patched.body.review_state).toBe("rejected");
 
     const queue = await s.get("/review");
@@ -84,9 +89,46 @@ describe("review", () => {
   it("publishes a needs_review event when a patch fixes the reason", async () => {
     const queue = await s.get("/review");
     const id = queue.body.events[0].id;
-    const res = await s.patch(`/events/${id}`, { confidence: 0.9, reason: "The organiser confirmed the exhibition." });
+    const res = await s.patch(`/events/${id}`, {
+      confidence: 0.9,
+      confidence_reason: "The organiser confirmed the dates and the venue.",
+      reason: "The organiser confirmed the exhibition.",
+    });
     expect(res.body.review_state).toBe("published");
     expect(res.body.changes.map((c: any) => c.field)).toEqual(expect.arrayContaining(["confidence", "review_state"]));
     expect((await s.get("/review")).body.count).toBe(0);
+  });
+});
+
+describe("confidence reason", () => {
+  let s: TestServer;
+  beforeAll(async () => {
+    s = await startServer();
+  });
+  afterAll(() => s.close());
+
+  it("requires a reason on create", async () => {
+    const scan = await ingestOne(s, "no-reason", { title: "Night market" });
+    const body = eventBody({ scan_ids: [scan.scan_id] }) as Record<string, unknown>;
+    delete body.confidence_reason;
+    const res = await s.post("/events", body);
+    expect(res.status).toBe(400);
+    expect(JSON.stringify(res.body.details)).toContain("confidence_reason");
+  });
+
+  it("requires a new reason when a patch changes the confidence", async () => {
+    const scan = await ingestOne(s, "patch-reason", { title: "Night market" });
+    const created = await s.post("/events", eventBody({ scan_ids: [scan.scan_id] }));
+    const res = await s.patch(`/events/${created.body.id}`, { confidence: 0.5, reason: "The venue closed." });
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe("confidence_reason is required when confidence changes");
+    const ok = await s.patch(`/events/${created.body.id}`, {
+      confidence: 0.5,
+      confidence_reason: "The venue closed, so the date may move.",
+      reason: "The venue closed.",
+    });
+    expect(ok.status).toBe(200);
+    expect(ok.body.review_reasons).toEqual(["confidence 0.5 is below 0.8: The venue closed, so the date may move."]);
+    expect(ok.body.changes.map((c: any) => c.field)).toEqual(expect.arrayContaining(["confidence", "confidence_reason"]));
   });
 });
