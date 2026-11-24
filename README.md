@@ -53,20 +53,6 @@ With Codex or another agent, use the prompt `Read .claude/skills/<skill>/SKILL.m
 - Published: 14 events. In review: 12 events. Each one in review names no town for its venue, for example "confidence 0.7 is below 0.8: The source names the venue 'Road House Cinema, Whale Coast Mall' but no town." The venue lookup under Production improvements removes most of this review work.
 - Trip search with the step 6 prompt: 8 events, including three concerts at Hermanus Golf Club, the Hermanus Country Market on both Saturdays and a vineyard afternoon in the Hemel-en-Aarde Valley. Each one has its date, time, price and source link. The agent also listed the First Fridays Art Walk from a second search without the interests filter.
 
-## Model
-
-| Entity | Purpose |
-|---|---|
-| Place | The area that the feed covers, with aliases such as Onrus and Sandbaai. |
-| Source | A site that the feed reads. |
-| Scan | One raw item from a source, as fetched. |
-| Event | What happens, with labels, confidence and its reason, review state and source links. |
-| Time | When it happens: one-off, recurring (rrule), continuous or seasonal, with a precision of exact, month or unknown. |
-| Event change | One changed field, with the old value, the new value, the reason and the scan that caused it. |
-| Term | One allowed label value, approved or proposed. |
-
-The API computes the status of an event for a date: `upcoming`, `running`, `finished`, `expected`, `cancelled` or `postponed`. An event with an unknown date has the status `expected`. Search always includes it, because it is likely to happen.
-
 ## Tests
 
 The tests in `test/` start the real server against a new database and call it over HTTP. `gold.e2e.test.ts` loads the gold set in `gold/events.json`. It then checks the status of each event on 24 November 2026, and it checks the search results for several trip windows.
