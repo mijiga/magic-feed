@@ -19,14 +19,14 @@ describe("review", () => {
     expect(low.body.review_reasons).toEqual(["confidence 0.6 is below 0.8"]);
     lowId = low.body.id;
 
-    await s.post("/vocabulary/proposals", { kind: "interests", term: "sport", reason: "Rugby and cricket matches" });
-    const b = await ingestOne(s, "rugby", { title: "Overberg rugby derby" });
+    await s.post("/vocabulary/proposals", { kind: "interests", term: "golf", reason: "Golf days and club tournaments" });
+    const b = await ingestOne(s, "rugby", { title: "Hermanus Golf Club Open Day" });
     const proposed = await s.post(
       "/events",
-      eventBody({ name: "Overberg rugby derby", category: "festival", interests: ["sport"], scan_ids: [b.scan_id] }),
+      eventBody({ name: "Hermanus Golf Club Open Day", category: "festival", interests: ["golf"], scan_ids: [b.scan_id] }),
     );
     expect(proposed.body.review_state).toBe("needs_review");
-    expect(proposed.body.review_reasons).toEqual(["uses proposed interest 'sport'"]);
+    expect(proposed.body.review_reasons).toEqual(["uses proposed interest 'golf'"]);
     proposedId = proposed.body.id;
 
     const c = await ingestOne(s, "unknown-date", { title: "Some exhibition" });
@@ -62,9 +62,9 @@ describe("review", () => {
       reason: "Sport is a useful interest.",
     });
     const vocab = await s.get("/vocabulary");
-    expect(vocab.body.interests.find((t: any) => t.term === "sport").status).toBe("approved");
+    expect(vocab.body.interests.find((t: any) => t.term === "golf").status).toBe("approved");
 
-    const feed = await s.get("/events?interests=sport");
+    const feed = await s.get("/events?interests=golf");
     expect(feed.body.events.map((e: any) => e.id)).toEqual([proposedId]);
   });
 

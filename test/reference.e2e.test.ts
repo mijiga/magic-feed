@@ -1,3 +1,4 @@
+import gold from "../gold/events.json" with { type: "json" };
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { startServer, type TestServer } from "./server.js";
 
@@ -25,17 +26,17 @@ describe("reference endpoints", () => {
     const { body } = await s.get("/vocabulary");
     expect(body.category.map((t: any) => t.term)).toContain("market");
     expect(body.interests.every((t: any) => t.status === "approved")).toBe(true);
-    expect(body.suitability.map((t: any) => t.term)).toEqual(["adults", "all ages"]);
+    expect(body.suitability.map((t: any) => t.term)).toEqual([...gold.vocabulary.suitability].sort());
   });
 
   it("proposes a term once", async () => {
-    const first = await s.post("/vocabulary/proposals", { kind: "interests", term: "sport", reason: "Rugby matches" });
+    const first = await s.post("/vocabulary/proposals", { kind: "interests", term: "golf", reason: "Golf days" });
     expect(first.status).toBe(201);
-    expect(first.body).toEqual({ kind: "interests", term: "sport", status: "proposed" });
-    const again = await s.post("/vocabulary/proposals", { kind: "interests", term: "sport", reason: "Again" });
+    expect(first.body).toEqual({ kind: "interests", term: "golf", status: "proposed" });
+    const again = await s.post("/vocabulary/proposals", { kind: "interests", term: "golf", reason: "Again" });
     expect(again.status).toBe(201);
     const { body } = await s.get("/vocabulary");
-    expect(body.interests.filter((t: any) => t.term === "sport")).toHaveLength(1);
+    expect(body.interests.filter((t: any) => t.term === "golf")).toHaveLength(1);
   });
 
   it("serves the OpenAPI document with every route", async () => {
