@@ -10,7 +10,9 @@
     "resolveJsonModule": true,
     "verbatimModuleSyntax": true,
     "types": ["node"],
-    "noEmit": true
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "hono/jsx"
   },
   "include": ["src", "test", "scripts", "drizzle.config.ts", "vitest.config.ts"]
 }
