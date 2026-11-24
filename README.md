@@ -26,7 +26,66 @@ npm run typecheck
 3. The API publishes an event when the confidence is 0.8 or higher and all labels are approved. Other events go to `GET /review` with their reasons, for example "confidence 0.6 is below 0.8: The source names no venue and no town." A person approves or rejects them with `POST /events/{id}/review`.
 4. A planner's agent with the `find-events` skill searches `GET /events` with the trip dates and the traveller's interests. It reads `GET /changes?since=` to see what changed since the last check.
 
-The skills are in `.claude/skills/`. Claude Code loads them in this folder. Another agent can read the same files as instructions.
+## Run the flow
+
+An agent does steps 1, 2 and 4 by following a skill. Each skill is a Markdown file in `.claude/skills/<name>/SKILL.md`. The agent reads it and calls the API with curl. You need Node 22 or later and Claude Code or Codex.
+
+**1. Start the API with an empty database.** Keep this terminal open.
+
+```sh
+npm install
+rm -f feed.db feed.db-wal feed.db-shm
+npm start
+```
+
+**2. Open a second terminal in this folder and start an agent.**
+
+With Claude Code, run `claude`. Claude Code loads the three skills from `.claude/skills/`, so you can call them as slash commands. Allow the agent to run `curl` and `python3` when it asks.
+
+With Codex or another agent, give the path of the skill file in the prompt, as in the prompts below.
+
+**3. Ingest the sources.**
+
+```text
+/ingest-sources
+```
+
+Other agents: `Read .claude/skills/ingest-sources/SKILL.md and follow it. The API runs at http://localhost:8787.`
+
+The agent fetches The Village NEWS calendar and posts every item to the API. Check the result with `curl "localhost:8787/scans?state=pending&limit=1"`. The `count` field shows the number of scans that wait for processing.
+
+**4. Process the scans.**
+
+```text
+/process-scans
+```
+
+Other agents: `Read .claude/skills/process-scans/SKILL.md and follow it until no scan is pending.`
+
+The agent decides for each scan if it is an event in Hermanus for travellers. It creates the events, merges repeated listings into one recurring event, and ignores the rest with a reason. This step takes a few minutes.
+
+**5. Look at the result.**
+
+- http://localhost:8787/feed shows the published events. Set Review to All to see every event.
+- `curl localhost:8787/review` lists the events that wait for a person, with the reason for each one.
+- To approve one: `curl -X POST localhost:8787/events/<id>/review -H 'content-type: application/json' -d '{"decision":"approve","note":"Checked the venue."}'`
+
+**6. Plan a trip.**
+
+```text
+/find-events A couple in their fifties stays in Hermanus from 3 to 12 December 2026. They like live music and wine, and they enjoy markets on a weekend morning. What is on while they are there?
+```
+
+The agent searches the feed for the trip window and the interests, and answers with dates, times, venues, prices and source links.
+
+**7. Run it again.** Run `/ingest-sources` again. Items with the same content come back `unchanged` and create no new scans. Changed items become new pending scans, and `/process-scans` updates the existing events. `GET /changes?since=<date>` lists every change.
+
+### Results of a run on 24 November 2026
+
+- Ingestion: 90 items from 2 pages of The Village NEWS.
+- Processing: 26 events (14 recurring), 41 scans ignored. 21 ignored scans were outside Hermanus (Stanford, Gansbaai, Greyton, Elim), and 20 were not for travellers (club meetings, support groups).
+- Published: 14 events. In review: 12 events. Each one in review names no town for its venue, for example "confidence 0.7 is below 0.8: The source names the venue 'Road House Cinema, Whale Coast Mall' but no town." `docs/production-improvements.md` describes a venue lookup that removes most of this review work.
+- Trip search with the step 6 prompt: 8 events, including three tribute concerts at Hermanus Golf Club, the Hermanus Country Market on both Saturdays and a vineyard afternoon in the Hemel-en-Aarde Valley. Each one has its date, time, price and source link. The agent also listed the First Fridays Art Walk from a second search without the interests filter.
 
 ## Model
 
