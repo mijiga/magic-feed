@@ -109,7 +109,7 @@ export const TimeInput = z
     }),
     end: z.string().nullable(),
     precision: Precision,
-    rrule: z.string().nullable().openapi({ example: "FREQ=MONTHLY;BYDAY=1SU", description: "RFC 5545 RRULE without DTSTART. start and end bound it." }),
+    rrule: z.string().nullable().default(null).openapi({ example: "FREQ=MONTHLY;BYDAY=1SU", description: "RFC 5545 RRULE without DTSTART. start and end bound it." }),
     exceptions: z.array(IsoDate).default([]).openapi({ description: "Dates on which a recurring event does not happen." }),
     start_time: HhMm.nullable().default(null),
     end_time: HhMm.nullable().default(null),
