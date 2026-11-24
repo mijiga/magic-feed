@@ -21,10 +21,10 @@ npm run typecheck
 
 ## Flow
 
-1. The `ingest-sources` agent posts each source item to `POST /scans`. Unchanged items do not create new scans.
-2. The `process-scans` agent turns pending scans into events, or ignores them with a reason.
+1. The [`ingest-sources`](.claude/skills/ingest-sources/SKILL.md) agent posts each source item to `POST /scans`. Unchanged items do not create new scans.
+2. The [`process-scans`](.claude/skills/process-scans/SKILL.md) agent turns pending scans into events, or ignores them with a reason.
 3. Events with confidence 0.8 or higher and approved labels are published. The rest go to `GET /review`.
-4. The `find-events` agent searches `GET /events` by trip dates and interests.
+4. The [`find-events`](.claude/skills/find-events/SKILL.md) agent searches `GET /events` by trip dates and interests.
 
 ## Run the flow
 
@@ -44,7 +44,7 @@ You need Node 22 or later and Claude Code or Codex.
 5. Open http://localhost:8787/feed. Set Review to All to see every event. `curl localhost:8787/review` lists the events that wait for a person.
 6. Run `/find-events` with a trip, for example: `/find-events A couple stays in Hermanus from 3 to 12 December 2026. They like live music, wine and weekend markets.`
 
-With Codex or another agent, use the prompt `Read .claude/skills/<skill>/SKILL.md and follow it.`
+With Codex or another agent, use the prompt `Read .claude/skills/<skill>/SKILL.md and follow it.` The skills are in [`.claude/skills/`](.claude/skills/).
 
 ### Results of a run on 24 November 2026
 
@@ -55,7 +55,7 @@ With Codex or another agent, use the prompt `Read .claude/skills/<skill>/SKILL.m
 
 ## Tests
 
-End-to-end tests over HTTP. `gold.e2e.test.ts` checks the gold set in `gold/events.json`.
+End-to-end tests over HTTP. [`gold.e2e.test.ts`](test/gold.e2e.test.ts) checks the gold set in [`gold/events.json`](gold/events.json). All tests are in [`test/`](test/).
 
 ## Production improvements
 
@@ -67,7 +67,7 @@ Many sources name a venue but no town, so the agent cannot confirm the location 
 
 I do not agree with a fixed set of sources, because it limits the feed. A fixed set helps to keep out scams, but open sources give more benefit.
 
-The first version reads only The Village NEWS. In production, the agent will search all the sources in `docs/sources-research.md` and find new ones. It will link listings of the same event and use each one to fill gaps in the others.
+The first version reads only The Village NEWS. In production, the agent will search all the sources in [`docs/sources-research.md`](docs/sources-research.md) and find new ones. It will link listings of the same event and use each one to fill gaps in the others.
 
 ### Database
 
@@ -75,14 +75,14 @@ The first version uses SQLite. Production could ideally use PostgreSQL.
 
 ## Documents
 
-- Design write-up: https://claude.ai/artifact/CTG3cyJAsXMKNdh5EdAqsZ. It has the plan, model, interface, agent tasks, verification cases and execution plan. The source is `docs/design-writeup.html`. (I put this together after the fact. Project direction was from hand written notes)
-- `docs/design-notes.md`: transcription of the pen and paper notes.
+- Design write-up: https://claude.ai/artifact/CTG3cyJAsXMKNdh5EdAqsZ. It has the plan, model, interface, agent tasks, verification cases and execution plan. The source is [`docs/design-writeup.html`](docs/design-writeup.html). (I put this together after the fact. Project direction was from hand written notes)
+- [`docs/design-notes.md`](docs/design-notes.md): transcription of the pen and paper notes.
 - Pen and paper notes:
   - [Page 1: event feed, core issues and failure points](docs/notes/notes-page-1.jpg)
   - [Page 2: process, entities and process flow](docs/notes/notes-page-2.jpg)
-- Entities and flow: https://claude.ai/artifact/38Nn9HQhPLYFTk6VdyuFAk. It shows the entities and the process flow from the pen and paper notes. The source is `docs/entities-and-flow.html`.
-- `docs/sources-research.md`: researched sources for Hermanus events.
-- `magic-feed-conversation.txt`: export of the Claude Code conversation in which I built the project.
+- Entities and flow: https://claude.ai/artifact/38Nn9HQhPLYFTk6VdyuFAk. It shows the entities and the process flow from the pen and paper notes. The source is [`docs/entities-and-flow.html`](docs/entities-and-flow.html).
+- [`docs/sources-research.md`](docs/sources-research.md): researched sources for Hermanus events.
+- [`magic-feed-conversation.txt`](magic-feed-conversation.txt): export of the Claude Code conversation in which I built the project.
 
 ## Stack
 
