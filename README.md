@@ -97,8 +97,7 @@ The first version uses SQLite. Production could ideally use PostgreSQL.
   - [Failure points, continued](docs/notes/IMG_4201.jpg)
   - [Process and Event entity](docs/notes/IMG_4202.jpg)
   - [Event and Time entities](docs/notes/IMG_4203.jpg)
-  - [Scan entity and first process flow](docs/notes/IMG_4204.jpg)
-  - [Latest process flow](docs/notes/IMG_4212.jpg)
+  - [Scan entity and process flow](docs/notes/IMG_4212.jpg)
 - Entities and flow: https://claude.ai/artifact/38Nn9HQhPLYFTk6VdyuFAk. It shows the entities and the process flow from the pen and paper notes. The source is `docs/entities-and-flow.html`.
 - `docs/sources-research.md`: researched sources for Hermanus events.
 - `magic-feed-conversation.txt`: export of the Claude Code conversation in which I built the project.
