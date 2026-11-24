@@ -39,9 +39,9 @@ describe("processing", () => {
     const scan = await s.post("/events", eventBody({ scan_ids: ["missing"] }));
     expect(scan.status).toBe(400);
     expect(scan.body.details.unknown).toEqual(["missing"]);
-    const label = await s.post("/events", eventBody({ interests: ["sport"], scan_ids: [firstScan] }));
+    const label = await s.post("/events", eventBody({ interests: ["golf"], scan_ids: [firstScan] }));
     expect(label.status).toBe(400);
-    expect(label.body.details[0]).toMatchObject({ field: "interests", unknown: ["sport"] });
+    expect(label.body.details[0]).toMatchObject({ field: "interests", unknown: ["golf"] });
     expect(label.body.details[0].allowed).toContain("food");
   });
 

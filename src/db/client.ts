@@ -21,6 +21,7 @@ export function openDb(path: string): Db {
   return db;
 }
 
+// A term that an agent proposed becomes approved when the user adds it to the gold set vocabulary.
 function seed(db: Db) {
   const now = new Date().toISOString();
   db.transaction((tx) => {
@@ -30,7 +31,7 @@ function seed(db: Db) {
       for (const term of APPROVED_VOCABULARY[kind]) {
         tx.insert(schema.terms)
           .values({ kind, term, status: "approved", reason: "Seed vocabulary", created_at: now })
-          .onConflictDoNothing()
+          .onConflictDoUpdate({ target: [schema.terms.kind, schema.terms.term], set: { status: "approved" } })
           .run();
       }
     }
