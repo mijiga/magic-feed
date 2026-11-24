@@ -225,6 +225,9 @@ export const SearchQuery = z.object({
   category: csv.openapi({ type: "string", description: "Match any." }),
   status: csv.openapi({ type: "string", description: "Default: upcoming,running,expected." }),
   q: z.string().optional().openapi({ description: "Text match on name, description and venue." }),
+  name: z.string().optional().openapi({
+    description: "Name match only: every word must appear in the event name, in any order. Use it to find duplicates.",
+  }),
   review: z.enum(["published", "needs_review", "rejected", "any"]).default("published"),
   as_of: IsoDate.optional().openapi({ description: "Date used to compute status. Default: today in the place's timezone." }),
   limit: z.coerce.number().int().min(1).max(200).default(50),
