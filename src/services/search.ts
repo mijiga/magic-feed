@@ -8,6 +8,12 @@ import { requirePlace } from "./vocabulary.js";
 
 const DEFAULT_STATUS = ["upcoming", "running", "expected"];
 
+const words = (s: string) => s.toLowerCase().normalize("NFKD").replace(/\p{M}/gu, "").replace(/[^\p{L}\p{N}\s]/gu, " ").split(/\s+/).filter(Boolean);
+const nameMatches = (name: string, wanted: string[]) => {
+  const have = new Set(words(name));
+  return wanted.every((w) => have.has(w));
+};
+
 const matchesAny = (have: string[], want?: string[]) => !want?.length || want.some((w) => have.includes(w));
 
 export function searchEvents(db: Db, q: SearchQuery, today: string): SearchResult {
@@ -30,8 +36,10 @@ export function searchEvents(db: Db, q: SearchQuery, today: string): SearchResul
     )
     .all();
 
+  const nameWords = q.name ? words(q.name) : [];
   const items: SearchResultItem[] = [];
   for (const row of rows) {
+    if (nameWords.length && !nameMatches(row.name, nameWords)) continue;
     if (q.category?.length && !q.category.includes(row.category)) continue;
     if (!matchesAny(row.interests, q.interests) || !matchesAny(row.suitability, q.suitability)) continue;
     const event = toEvent(db, row, asOf);
