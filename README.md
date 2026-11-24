@@ -90,7 +90,15 @@ The first version uses SQLite. Production could ideally use PostgreSQL.
 ## Documents
 
 - Design write-up: https://claude.ai/artifact/CTG3cyJAsXMKNdh5EdAqsZ. It has the plan, model, interface, agent tasks, verification cases and execution plan. The source is `docs/design-writeup.html`. (I put this together after the fact. Project direction was from hand written notes)
-- `docs/design-notes.md`: transcription of the pen and paper notes. The photos are in `docs/notes/`.
+- `docs/design-notes.md`: transcription of the pen and paper notes.
+- Pen and paper notes:
+  - [Event feed: users and needs](docs/notes/IMG_4199.jpg)
+  - [Core issues and failure points](docs/notes/IMG_4200.jpg)
+  - [Failure points, continued](docs/notes/IMG_4201.jpg)
+  - [Process and Event entity](docs/notes/IMG_4202.jpg)
+  - [Event and Time entities](docs/notes/IMG_4203.jpg)
+  - [Scan entity and first process flow](docs/notes/IMG_4204.jpg)
+  - [Latest process flow](docs/notes/IMG_4212.jpg)
 - Entities and flow: https://claude.ai/artifact/38Nn9HQhPLYFTk6VdyuFAk. It shows the entities and the process flow from the pen and paper notes. The source is `docs/entities-and-flow.html`.
 - `docs/sources-research.md`: researched sources for Hermanus events.
 - `magic-feed-conversation.txt`: export of the Claude Code conversation in which I built the project.
