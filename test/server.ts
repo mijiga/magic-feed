@@ -58,6 +58,7 @@ export function eventBody(overrides: Record<string, unknown> = {}) {
     interests: ["food", "shopping"],
     suitability: ["all ages"],
     confidence: 0.9,
+    confidence_reason: "The test fixture states the place, the dates and the labels.",
     times: [
       {
         type: "recurring",
